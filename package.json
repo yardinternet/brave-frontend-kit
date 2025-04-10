@@ -1,14 +1,26 @@
 {
-  "name": "brave-frontend-kit",
+  "name": "@yardinternet/brave-frontend-kit",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
+  "main": "dist/brave-frontend-kit.umd.cjs",
+  "module": "dist/brave-frontend-kit.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yardinternet/brave-frontend-kit.git"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/@yardinternet"
+  },
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "start": "tsc && vite build",
+    "build": "tsc && vite build"
   },
   "devDependencies": {
+    "@yardinternet/prettier-config": "^1.0.2",
     "typescript": "~5.7.2",
     "vite": "^6.2.0"
   }

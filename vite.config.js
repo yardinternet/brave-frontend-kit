@@ -1,14 +1,20 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
 
-export default defineConfig( {
-	build: {
-		lib: {
-			entry: resolve( __dirname, 'src/index.ts' ),
-			name: 'BraveFrontendTools',
+export default defineConfig( () => {
+	const isWatchMode = process.env.WATCH === 'true';
+
+	return {
+		build: {
+			lib: {
+				entry: resolve( __dirname, 'src/index.ts' ),
+				name: 'BraveFrontendTools',
+			},
+			watch: isWatchMode
+				? {
+						include: 'src/**',
+				  }
+				: null,
 		},
-		watch: {
-			include: 'src/**',
-		},
-	},
+	};
 } );

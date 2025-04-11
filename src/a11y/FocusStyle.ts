@@ -20,16 +20,14 @@ export default class FocusStyle {
 	}
 
 	private handleTab( e: KeyboardEvent ) {
-		if ( e.key === 'Tab' ) {
-			document.body.classList.add( this.bodyClass );
-			document.removeEventListener( 'keydown', ( e ) =>
-				this.handleTab( e )
-			);
-		}
+		if ( e.key !== 'Tab' ) return;
+
+		document.body.classList.add( this.bodyClass );
+		document.removeEventListener( 'keydown', this.handleTab );
 	}
 
 	private handleMouseDown() {
 		document.body.classList.remove( this.bodyClass );
-		document.addEventListener( 'keydown', ( e ) => this.handleTab( e ) );
+		window.removeEventListener( 'mousedown', this.handleMouseDown );
 	}
 }

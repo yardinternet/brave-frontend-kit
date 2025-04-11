@@ -1,6 +1,5 @@
 {
 	"name": "@yardinternet/brave-frontend-kit",
-	"private": true,
 	"version": "0.1.0",
 	"type": "module",
 	"main": "dist/brave-frontend-kit.umd.cjs",

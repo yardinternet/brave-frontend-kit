@@ -1,10 +1,6 @@
 import FocusStyle from './a11y/FocusStyle.ts';
-import {
-	findTabbable,
-	findFirstTabbable,
-	transformTag,
-	checkCanFocusTrap,
-} from './utils/a11y.ts';
+import { findTabbable, findFirstTabbable, transformTag } from './utils/a11y.ts';
+import { checkCanFocusTrap } from './utils/focus-trap.ts';
 
 // Components
 export { FocusStyle };

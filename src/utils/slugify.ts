@@ -12,7 +12,8 @@ const slugify = ( text: string | undefined ) => {
 		.trim() // Remove whitespace from both sides of a string (optional)
 		.replace( /\s+/g, '-' ) // eslint-disable-line no-useless-escape
 		.replace( /[^\w\-]+/g, '' ) // eslint-disable-line no-useless-escape
-		.replace( /\-\-+/g, '-' ); // eslint-disable-line no-useless-escape
+		.replace( /\-\-+/g, '-' ) // eslint-disable-line no-useless-escape
+		.replace( /\-$/, '' ); // eslint-disable-line no-useless-escape
 };
 
 export { slugify };

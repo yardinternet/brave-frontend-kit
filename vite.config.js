@@ -16,5 +16,8 @@ export default defineConfig( () => {
 				  }
 				: null,
 		},
+		test: {
+			environment: 'jsdom',
+		},
 	};
 } );

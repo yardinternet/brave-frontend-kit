@@ -4,9 +4,11 @@ interface FocusStyleOptions {
 
 export default class FocusStyle {
 	private bodyClass: string;
+	private isUsingKeyboard: boolean;
 
 	constructor( options: FocusStyleOptions = {} ) {
 		this.bodyClass = options.bodyClass || 'js-user-is-tabbing';
+		this.isUsingKeyboard = false;
 		this.init();
 	}
 
@@ -15,19 +17,21 @@ export default class FocusStyle {
 	}
 
 	private bindEvents() {
-		document.addEventListener( 'keydown', ( e ) => this.handleTab( e ) );
-		document.addEventListener( 'mousedown', () => this.handleMouseDown() );
+		document.addEventListener( 'keydown', this.handleKeyDown );
+		document.addEventListener( 'mousedown', this.handleMouseDown );
 	}
 
-	private handleTab( e: KeyboardEvent ) {
-		if ( e.key !== 'Tab' ) return;
+	private handleKeyDown = ( e: KeyboardEvent ) => {
+		if ( e.key !== 'Tab' || this.isUsingKeyboard ) return;
 
+		this.isUsingKeyboard = true;
 		document.body.classList.add( this.bodyClass );
-		document.removeEventListener( 'keydown', this.handleTab );
-	}
+	};
 
-	private handleMouseDown() {
+	private handleMouseDown = () => {
+		if ( ! this.isUsingKeyboard ) return;
+
+		this.isUsingKeyboard = false;
 		document.body.classList.remove( this.bodyClass );
-		window.removeEventListener( 'mousedown', this.handleMouseDown );
-	}
+	};
 }

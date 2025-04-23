@@ -2,7 +2,7 @@ interface FocusStyleOptions {
 	bodyClass?: string;
 }
 
-export default class FocusStyle {
+export class FocusStyle {
 	private bodyClass: string;
 	private isUsingKeyboard: boolean;
 

@@ -8,11 +8,15 @@ A modular frontend toolkit designed to help with Brave project development, incl
 npm install @yardinternet/brave-frontend-kit
 ```
 
-## ⚙️ Classes
+## ⚙️ Modules
 
 ### `FocusStyle`
 
 Adds a specific class to the body when the user is navigating via keyboard (Tab key). It ensures that we can style keyboard users differently from mouse users.
+
+![FocusStyle Example](./docs/example-focus-style.gif)
+
+#### Usage
 
 ```javascript
 import { FocusStyle } from '@yardinternet/brave-frontend-kit';
@@ -20,13 +24,78 @@ import { FocusStyle } from '@yardinternet/brave-frontend-kit';
 // Default: initialize the FocusStyle class
 const focusStyle = new FocusStyle();
 
-// Options: add a custom class
+// Extended usage: all options
 const customFocusStyle = new FocusStyle( {
-    bodyClass: 'custom-class',
+ bodyClass: 'custom-class',
 } );
 ```
 
-## 🛠️ Helpers
+### `EnhanceExternalLinks`
+
+![EnhanceExternalLinks Example](./docs/example-enhance-external-link.png)
+
+Adds an icon to external links by checking if the hostname differs from the current site.
+
+#### Usage
+
+```javascript
+import { EnhanceExternalLinks } from '@yardinternet/brave-frontend-kit';
+
+// Basic usage
+new EnhanceExternalLinks( {
+ selector: '.main a',
+ icon: '<i class="fa-regular fa-up-right-from-square mx-2"></i>',
+ excludedClasses: [ 'wp-block-button__link' ],
+} );
+
+// Extended usage: all options
+new EnhanceExternalLinks( {
+ selector: '.main a',
+ icon: '<i class="fa-regular fa-up-right-from-square mx-2"></i>',
+ excludedClasses: [ 'wp-block-button__link' ],
+ excludedUrlKeywords: [ 'openpdc' ],
+ insertIconBeforeText: true,
+} );
+```
+
+### `EnhancePDFLinks`
+
+Enhances `.pdf` links with a visual icon and optional file size fetched via a `HEAD` request.
+
+![EnhancePDFLinks Example](./docs/example-enhance-pdf-link.png)
+
+#### Usage
+
+```javascript
+import { EnhancePDFLinks } from '@yardinternet/brave-frontend-kit';
+
+// Basic usage
+new EnhancePDFLinks( {
+ selector: '.main a',
+ icon: '<i class="fa-regular fa-file-pdf mx-2"></i>',
+ fileSizeClass: 'text-xs underline',
+} );
+
+// Extended usage: all options
+new EnhancePDFLinks( {
+ selector: '.main a',
+ icon: '<i class="fa-regular fa-file-pdf mx-2"></i>',
+ excludedClasses: [ 'wp-block-button__link' ],
+ excludedUrlKeywords: [ 'openpdc' ],
+ insertIconBeforeText: true,
+ showFileSize: false,
+ fileSizeClass: 'text-xs italic text-gray-500',
+ insertIconBeforeText: true,
+  createFileSizeElement: ( bytes ) => {
+   const span = document.createElement( 'span' );
+   span.classList.add( 'text-xs' );
+   span.innerHTML = ` (pdf, ${ Math.round( bytes / 1024 ) } KB)`;
+   return span;
+  },
+} );
+```
+
+## 🛠️ Utils
 
 TBA
 

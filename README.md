@@ -43,9 +43,8 @@ import { EnhanceExternalLinks } from '@yardinternet/brave-frontend-kit';
 
 // Basic usage
 new EnhanceExternalLinks( {
- selector: '.main a',
- icon: '<i class="fa-regular fa-up-right-from-square mx-2"></i>',
- excludedClasses: [ 'wp-block-button__link' ],
+  selector: '.main a',
+  icon: '<i class="js-enhance-external-link-icon fa-light fa-arrow-up-right-from-square"></i>',
 } );
 
 // Extended usage: all options
@@ -70,10 +69,10 @@ Enhances `.pdf` links with a visual icon and optional file size fetched via a `H
 import { EnhancePDFLinks } from '@yardinternet/brave-frontend-kit';
 
 // Basic usage
-new EnhancePDFLinks( {
- selector: '.main a',
- icon: '<i class="fa-regular fa-file-pdf mx-2"></i>',
- fileSizeClass: 'text-xs underline',
+new EnhancePDFLinks( {a
+  selector: '.main a',
+  icon: '<i class="js-enhance-pdf-link-icon fa-light fa-file-pdf mx-2"></i>',
+  fileSizeClass: 'js-enhance-pdf-link-file-size text-xs',
 } );
 
 // Extended usage: all options
@@ -84,7 +83,7 @@ new EnhancePDFLinks( {
  excludedUrlKeywords: [ 'openpdc' ],
  insertIconBeforeText: true,
  showFileSize: false,
- fileSizeClass: 'text-xs italic text-gray-500',
+ fileSizeClass: 'js-enhance-pdf-link-file-size text-xs',
  insertIconBeforeText: true,
   createFileSizeElement: ( bytes ) => {
    const span = document.createElement( 'span' );

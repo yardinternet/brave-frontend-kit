@@ -21,10 +21,20 @@ export class EnhanceExternalLinks extends EnhanceLinksBase {
 
 				if ( url.hostname !== window.location.hostname ) {
 					this.insertIcon( link );
+					this.insertSrOnlyText( link, ' (externe link)' );
 				}
 			} catch {
 				// invalid URL
 			}
 		} );
+	}
+
+	protected insertSrOnlyText( link: HTMLAnchorElement, text: string ) {
+		const srOnlyText = document.createElement( 'span' );
+		srOnlyText.classList.add( 'sr-only' );
+		srOnlyText.textContent = text;
+		this.insertIconBeforeText
+			? link.prepend( srOnlyText )
+			: link.append( srOnlyText );
 	}
 }

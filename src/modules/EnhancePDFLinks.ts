@@ -19,7 +19,7 @@ export class EnhancePDFLinks extends EnhanceLinksBase {
 		super( options );
 		this.showFileSize = options.showFileSize ?? true;
 		this.fileSizeClass =
-			options.fileSizeClass || 'js-enhance-pdf-link-size';
+			options.fileSizeClass || 'js-enhance-pdf-link-file-size';
 		this.createFileSizeElementFn = options.createFileSizeElement;
 
 		this.init();
@@ -33,22 +33,19 @@ export class EnhancePDFLinks extends EnhanceLinksBase {
 		links.forEach( ( link ) => {
 			const href = link.getAttribute( 'href' );
 
-			if ( ! this.isPdfLink( link, href ) ) return;
-
-			this.insertIcon( link );
+			if (
+				! href ||
+				! href.endsWith( '.pdf' ) ||
+				this.shouldIgnore( link, href )
+			)
+				return;
 
 			if ( this.showFileSize ) {
 				this.appendPdfFileSize( link );
+			} else {
+				this.insertIcon( link );
 			}
 		} );
-	}
-
-	private isPdfLink( link: HTMLAnchorElement, href: string | null ): boolean {
-		return (
-			!! href &&
-			href.endsWith( '.pdf' ) &&
-			! this.shouldIgnore( link, href )
-		);
 	}
 
 	private appendPdfFileSize( link: HTMLAnchorElement ): void {
@@ -70,6 +67,8 @@ export class EnhancePDFLinks extends EnhanceLinksBase {
 
 			const span = this.createFileSizeElement( parseInt( length, 10 ) );
 			link.appendChild( span );
+
+			this.insertIcon( link );
 		};
 
 		request.send();

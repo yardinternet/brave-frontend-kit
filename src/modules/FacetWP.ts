@@ -1,15 +1,17 @@
 import { findFirstTabbable } from '@utils/helpers.ts';
 
 export class FacetWP {
-	#options;
+	private options: object;
+	private readonly selectorPrefix: string;
 
-	constructor( options = {} ) {
-		this.#options = options;
+	constructor( selectorPrefix: string = 'js-brave', options: object = {} ) {
+		this.selectorPrefix = selectorPrefix;
+		this.options = options;
 
 		this.init();
 	}
 
-	private init() {
+	private init(): void {
 		this.bindEvents();
 	}
 
@@ -17,19 +19,23 @@ export class FacetWP {
 		document.addEventListener( 'facetwp-refresh', () =>
 			this.onFacetRefresh()
 		);
-		document.addEventListener( 'facetwp-loaded', ( e ) =>
+		document.addEventListener( 'facetwp-loaded', ( e: Event ) =>
 			this.onFacetLoad( e )
 		);
 	}
 
 	private onFacetRefresh(): void {
-		const view = document.getElementById( 'js-facetwp-template-view' );
+		const view = document.getElementById(
+			this.selectorPrefix + '-facetwp-template-view'
+		);
 		if ( ! view ) return;
 		view.classList.add( 'loading' );
 	}
 
 	private onFacetLoad( e: Event ): void {
-		const view = document.getElementById( 'js-facetwp-template-view' );
+		const view = document.getElementById(
+			this.selectorPrefix + '-facetwp-template-view'
+		);
 		if ( ! view ) return;
 		view.classList.remove( 'loading' );
 
@@ -130,7 +136,7 @@ export class FacetWP {
 	private changeTabFocusToTemplate(): void {
 		setTimeout( () => {
 			const template = document.getElementById(
-				'js-facetwp-template-view'
+				this.selectorPrefix + '-facetwp-template-view'
 			);
 			const firstTabbable = findFirstTabbable( template );
 			firstTabbable?.focus();
@@ -142,7 +148,7 @@ export class FacetWP {
 	 */
 	private toggleFilterLabelAndButton(): void {
 		const filterElements = document.querySelectorAll(
-			'.js-facetwp-filter-label, .js-facetwp-btn-reset'
+			`.${ this.selectorPrefix }-facetwp-filter-label, .${ this.selectorPrefix }-facetwp-btn-reset`
 		);
 
 		if ( filterElements.length === 0 ) return;

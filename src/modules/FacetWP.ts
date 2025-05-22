@@ -1,12 +1,14 @@
-import { findFirstTabbable } from '@utils/helpers.ts';
+import { findFirstTabbable } from '@utils/a11y.ts';
+
+interface FacetWPOptions {
+	selectorPrefix?: string;
+}
 
 export class FacetWP {
-	private options: object;
 	private readonly selectorPrefix: string;
 
-	constructor( selectorPrefix: string = 'js-brave', options: object = {} ) {
-		this.selectorPrefix = selectorPrefix;
-		this.options = options;
+	constructor( options: FacetWPOptions = {} ) {
+		this.selectorPrefix = options.selectorPrefix || 'js-brave';
 
 		this.init();
 	}

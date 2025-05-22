@@ -63,12 +63,9 @@ export class FacetWP {
 		if ( ! ( window as any )?.FWP?.loaded ) return;
 
 		const position = boxTop - this.scrollToTopOffset;
-		console.info( 'hbefore', window.scrollY, position );
-		if ( window.scrollY < position ) {
-			console.log( 'eeee' );
-			return;
-		} // if top box already visible
-		console.info( 'here is frek' );
+
+		if ( window.scrollY < position ) return; // if top box already visible
+
 		window.scrollTo( {
 			top: position,
 			behavior: 'smooth',

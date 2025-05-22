@@ -114,7 +114,7 @@ new WebShareApi( {
 
 ### `FacetWP`
 
-Enhances FacetWP search pages. Adds scroll to top, aria label to search, focus change on pager, hides label on filter and reset filters if no filters selected.
+Enhances FacetWP search pages. Adds scroll to top, aria labels, focus change on pager, hides label on filter and reset filters if no filters selected.
 
 #### Usage
 
@@ -126,7 +126,8 @@ new FacetWP();
 
 // Extended usage: all options
 new FacetWP({
-    selectorPrefix: 'js'
+    selectorPrefix: 'js',
+    scrollToTopOffset: 150,
 });
 ```
 

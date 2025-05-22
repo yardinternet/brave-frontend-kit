@@ -17,7 +17,8 @@
 	"scripts": {
 		"start": "WATCH=true vite build",
 		"build": "vite build",
-		"test": "vitest"
+		"test": "vitest",
+		"format": "yard-toolkit format js -m custom './src/**/*.{ts,js}'"
 	},
 	"devDependencies": {
 		"@yardinternet/prettier-config": "^1.0.2",
@@ -25,5 +26,8 @@
 		"typescript": "~5.7.2",
 		"vite": "^6.2.0",
 		"vitest": "^3.1.1"
+	},
+	"dependencies": {
+		"@yardinternet/toolkit": "^1.0.3"
 	}
 }

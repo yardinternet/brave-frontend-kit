@@ -2,13 +2,16 @@ import { findFirstTabbable } from '@utils/a11y.ts';
 
 interface FacetWPOptions {
 	selectorPrefix?: string;
+	scrollToTopOffset?: number; // Adjust this number to alter final scroll to top position
 }
 
 export class FacetWP {
-	private readonly selectorPrefix: string;
+	public readonly selectorPrefix: string;
+	public readonly scrollToTopOffset: number;
 
 	constructor( options: FacetWPOptions = {} ) {
 		this.selectorPrefix = options.selectorPrefix || 'js-brave';
+		this.scrollToTopOffset = options.scrollToTopOffset || 150;
 
 		this.init();
 	}
@@ -41,7 +44,8 @@ export class FacetWP {
 		if ( ! view ) return;
 		view.classList.remove( 'loading' );
 
-		this.scrollToTop( e, view );
+		e.preventDefault();
+		this.scrollToTopBox( view.getBoundingClientRect().top );
 		this.addAriaLabelToSearch();
 		this.changeTabFocusPager();
 		this.toggleFilterLabelAndButton();
@@ -55,22 +59,20 @@ export class FacetWP {
 		}, 1 );
 	}
 
-	private scrollToTop( e: Event, view: HTMLElement ): void {
-		e.preventDefault();
+	public scrollToTopBox( boxTop: number ): void {
+		if ( ! ( window as any )?.FWP?.loaded ) return;
 
-		const offset = 150; // Adjust this number to alter final scroll position
-		const scrollPosition =
-			view.getBoundingClientRect().top + window.scrollY - offset;
-
-		if ( ( window as any ).FWP.loaded ) {
-			// Only scrollToTop if the user has scrolled down a bit
-			if ( window.scrollY < scrollPosition + 300 ) return;
-
-			window.scrollTo( {
-				top: scrollPosition,
-				behavior: 'smooth',
-			} );
-		}
+		const position = boxTop - this.scrollToTopOffset;
+		console.info( 'hbefore', window.scrollY, position );
+		if ( window.scrollY < position ) {
+			console.log( 'eeee' );
+			return;
+		} // if top box already visible
+		console.info( 'here is frek' );
+		window.scrollTo( {
+			top: position,
+			behavior: 'smooth',
+		} );
 	}
 
 	/**

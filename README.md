@@ -112,6 +112,24 @@ new WebShareApi( {
 } );
 ```
 
+### `FacetWP`
+
+Enhances FacetWP search pages. Adds scroll to top, aria label to search, focus change on pager, hides label on filter and reset filters if no filters selected.
+
+#### Usage
+
+```javascript
+import { FacetWP } from '@yardinternet/brave-frontend-kit';
+
+// Basic usage
+new FacetWP();
+
+// Extended usage: all options
+new FacetWP({
+    selectorPrefix: 'js'
+});
+```
+
 ## 🛠️ Utils
 
 TBA

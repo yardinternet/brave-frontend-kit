@@ -8,11 +8,11 @@ import { checkCanFocusTrap } from '@utils/focus-trap';
 
 // Modules
 export {
-	EnhancePDFLinks,
+	A11yFacetWP,
 	EnhanceExternalLinks,
+	EnhancePDFLinks,
 	FocusStyle,
 	WebShareApi,
-	A11yFacetWP,
 };
 
 // Utils

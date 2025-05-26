@@ -45,7 +45,7 @@ export class A11yFacetWP {
 		view.classList.remove( 'loading' );
 
 		e.preventDefault();
-		this.scrollToTopBox( view.getBoundingClientRect().top );
+		this.scrollToElementTop( view.getBoundingClientRect().top );
 		this.addAriaLabelToSearch();
 		this.changeTabFocusPager();
 		this.toggleFilterLabelAndButton();
@@ -59,10 +59,10 @@ export class A11yFacetWP {
 		}, 1 );
 	}
 
-	public scrollToTopBox( boxTop: number ): void {
+	public scrollToElementTop( elementTop: number ): void {
 		if ( ! ( window as any )?.FWP?.loaded ) return;
 
-		const position = boxTop - this.scrollToTopOffset;
+		const position = elementTop - this.scrollToTopOffset;
 
 		if ( window.scrollY < position ) return; // if top box already visible
 

@@ -77,7 +77,7 @@ describe( 'FacetWP', () => {
 		window.scrollY = 2;
 		const boxTop = 750;
 
-		facetWP.scrollToTopBox( boxTop );
+		facetWP.scrollToElementTop( boxTop );
 
 		expect( window.scrollY ).toBe( window.scrollY );
 	} );
@@ -98,7 +98,7 @@ describe( 'FacetWP', () => {
 			( input ) => ( window.scrollY = input.top )
 		);
 
-		facetWP.scrollToTopBox( boxTop );
+		facetWP.scrollToElementTop( boxTop );
 
 		expect( window.scrollY ).toBe( position );
 	} );

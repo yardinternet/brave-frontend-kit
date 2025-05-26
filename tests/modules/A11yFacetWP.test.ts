@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { FacetWP } from '@modules/FacetWP.ts';
+import { A11yFacetWP } from '@modules/A11yFacetWP.ts';
 
 describe( 'FacetWP', () => {
 	const templateViewId = 'js-brave-facetwp-template-view';
@@ -12,13 +12,13 @@ describe( 'FacetWP', () => {
 	} );
 
 	it( 'should have a default for the selectorPrefix option', () => {
-		const facetWP = new FacetWP();
+		const facetWP = new A11yFacetWP();
 
 		expect( facetWP.selectorPrefix ).toBe( 'js-brave' );
 	} );
 
 	it( 'should take selectorPrefix option', () => {
-		const facetWP = new FacetWP( {
+		const facetWP = new A11yFacetWP( {
 			selectorPrefix: 'js',
 		} );
 
@@ -26,7 +26,7 @@ describe( 'FacetWP', () => {
 	} );
 
 	it( 'should add loading to tempate view on FacetWP refresh', () => {
-		new FacetWP();
+		new A11yFacetWP();
 
 		const facetRefreshEvent = new CustomEvent( 'facetwp-refresh' );
 		document.dispatchEvent( facetRefreshEvent );
@@ -40,7 +40,7 @@ describe( 'FacetWP', () => {
 	} );
 
 	it( 'should remove loading to tempate view on FacetWP loaded', () => {
-		new FacetWP();
+		new A11yFacetWP();
 
 		const facetLoadedEvent = new CustomEvent( 'facetwp-loaded' );
 		document.dispatchEvent( facetLoadedEvent );
@@ -54,13 +54,13 @@ describe( 'FacetWP', () => {
 	} );
 
 	it( 'should have a default for the scrollToTopOffset option', () => {
-		const facetWP = new FacetWP();
+		const facetWP = new A11yFacetWP();
 
 		expect( facetWP.scrollToTopOffset ).toBe( 150 );
 	} );
 
 	it( 'should take scrollToTopOffset option', () => {
-		const facetWP = new FacetWP( {
+		const facetWP = new A11yFacetWP( {
 			scrollToTopOffset: 120,
 		} );
 
@@ -68,7 +68,7 @@ describe( 'FacetWP', () => {
 	} );
 
 	it( 'should not scroll to top if scrollY is smaller than boxTop', () => {
-		const facetWP = new FacetWP();
+		const facetWP = new A11yFacetWP();
 
 		window.FWP = {
 			loaded: true,
@@ -83,7 +83,7 @@ describe( 'FacetWP', () => {
 	} );
 
 	it( 'should not scroll to top if scrollY is smaller than boxTop', () => {
-		const facetWP = new FacetWP();
+		const facetWP = new A11yFacetWP();
 
 		window.FWP = {
 			loaded: true,

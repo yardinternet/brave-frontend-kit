@@ -112,20 +112,20 @@ new WebShareApi( {
 } );
 ```
 
-### `FacetWP`
+### `A11yFacetWP`
 
-Enhances FacetWP search pages. Adds scroll to top, aria labels, focus change on pager, hides label on filter and reset filters if no filters selected.
+Enhances A11yFacetWP search pages. Adds scroll to top, aria labels, focus change on pager, hides label on filter and reset filters if no filters selected.
 
 #### Usage
 
 ```javascript
-import { FacetWP } from '@yardinternet/brave-frontend-kit';
+import { A11yFacetWP } from '@yardinternet/brave-frontend-kit';
 
 // Basic usage
-new FacetWP();
+new A11yFacetWP();
 
 // Extended usage: all options
-new FacetWP({
+new A11yFacetWP({
     selectorPrefix: 'js',
     scrollToTopOffset: 150,
 });

@@ -1,5 +1,5 @@
 import { FocusStyle } from '@modules/FocusStyle';
-import { FacetWP } from '@modules/FacetWP';
+import { A11yFacetWP } from '@modules/A11yFacetWP.ts';
 import { EnhanceExternalLinks } from '@modules/EnhanceExternalLinks';
 import { EnhancePDFLinks } from '@modules/EnhancePDFLinks';
 import { WebShareApi } from '@modules/WebShareApi';
@@ -12,7 +12,7 @@ export {
 	EnhanceExternalLinks,
 	FocusStyle,
 	WebShareApi,
-	FacetWP,
+	A11yFacetWP,
 };
 
 // Utils

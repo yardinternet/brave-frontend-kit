@@ -5,7 +5,7 @@ interface FacetWPOptions {
 	scrollToTopOffset?: number; // Adjust this number to alter final scroll to top position
 }
 
-export class FacetWP {
+export class A11yFacetWP {
 	public readonly selectorPrefix: string;
 	public readonly scrollToTopOffset: number;
 

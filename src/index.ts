@@ -1,5 +1,6 @@
 import { FocusStyle } from '@modules/FocusStyle';
 import { A11yFacetWP } from '@modules/A11yFacetWP.ts';
+import { A11yMobileMenu } from '@modules/A11yMobileMenu.ts';
 import { EnhanceExternalLinks } from '@modules/EnhanceExternalLinks';
 import { EnhancePDFLinks } from '@modules/EnhancePDFLinks';
 import { WebShareApi } from '@modules/WebShareApi';
@@ -9,6 +10,7 @@ import { checkCanFocusTrap } from '@utils/focus-trap';
 // Modules
 export {
 	A11yFacetWP,
+	A11yMobileMenu,
 	EnhanceExternalLinks,
 	EnhancePDFLinks,
 	FocusStyle,

@@ -4,6 +4,7 @@ import { checkCanFocusTrap } from '@utils/focus-trap.ts';
 
 interface A11yMobileMenuOptions {
 	selectorPrefix?: string;
+	focusTrapOptions: focusTrap.Options;
 }
 
 export class A11yMobileMenu {
@@ -16,13 +17,18 @@ export class A11yMobileMenu {
 
 	public readonly selectorPrefix: string;
 
-	constructor( options: A11yMobileMenuOptions = {} ) {
+	constructor(
+		options: A11yMobileMenuOptions = {
+			focusTrapOptions: {
+				allowOutsideClick: true,
+				checkCanFocusTrap,
+				onActivate: () => this.onActivateFocusTrap(),
+				onDeactivate: () => this.onDeactivateFocusTrap(),
+			},
+		}
+	) {
 		this.selectorPrefix = options.selectorPrefix || 'js-brave';
 
-		this.init();
-	}
-
-	private init() {
 		this.closeBtn = document.querySelector(
 			`#${ this.selectorPrefix }-mobile-menu-close-btn`
 		);
@@ -36,12 +42,7 @@ export class A11yMobileMenu {
 			'.mobile-menu .menu-item-has-children'
 		);
 
-		this.focusTrapOptions = {
-			allowOutsideClick: true,
-			checkCanFocusTrap,
-			onActivate: () => this.onActivateFocusTrap(),
-			onDeactivate: () => this.onDeactivateFocusTrap(),
-		};
+		this.focusTrapOptions = options.focusTrapOptions;
 
 		this.bindEvents();
 	}

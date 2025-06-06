@@ -2,9 +2,16 @@ import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import * as focusTrap from 'focus-trap';
 import { checkCanFocusTrap } from '@utils/focus-trap.ts';
 
+interface MobileAnimate {
+	keyframes?: Keyframe[] | PropertyIndexedKeyframes;
+	options?: number | KeyframeAnimationOptions;
+}
+
 interface A11yMobileMenuOptions {
 	selectorPrefix?: string;
 	focusTrapOptions: focusTrap.Options;
+	onActivateFocusTrapAnimate?: MobileAnimate;
+	onDeactivateFocusTrapAnimate?: MobileAnimate;
 }
 
 export class A11yMobileMenu {
@@ -14,6 +21,8 @@ export class A11yMobileMenu {
 	private mobileMenu: HTMLElement | null;
 	private expandableMenuItems: NodeListOf< Element >;
 	private focusTrapOptions: focusTrap.Options;
+	private onDeactivateFocusTrapAnimate: MobileAnimate | null;
+	private onActivateFocusTrapAnimate: MobileAnimate | null;
 
 	public readonly selectorPrefix: string;
 
@@ -28,6 +37,10 @@ export class A11yMobileMenu {
 		}
 	) {
 		this.selectorPrefix = options.selectorPrefix || 'js-brave';
+		this.onActivateFocusTrapAnimate =
+			options?.onActivateFocusTrapAnimate || null;
+		this.onDeactivateFocusTrapAnimate =
+			options?.onDeactivateFocusTrapAnimate || null;
 
 		this.closeBtn = document.querySelector(
 			`#${ this.selectorPrefix }-mobile-menu-close-btn`
@@ -83,7 +96,7 @@ export class A11yMobileMenu {
 		this.mobileMenu.setAttribute( 'aria-hidden', 'false' );
 
 		this.mobileMenu.animate(
-			[
+			this.onActivateFocusTrapAnimate?.keyframes ?? [
 				{
 					transform: 'translateX(100%)',
 					opacity: '0',
@@ -95,7 +108,7 @@ export class A11yMobileMenu {
 					visibility: 'visible',
 				},
 			],
-			{
+			this.onActivateFocusTrapAnimate?.options ?? {
 				duration: 500,
 				easing: 'cubic-bezier(0.22,1,0.36,1)',
 				fill: 'both',
@@ -106,7 +119,7 @@ export class A11yMobileMenu {
 	/**
 	 * Hide mobile menu. Unlock body scroll and add correct aria attributes.
 	 */
-	private onDeactivateFocusTrap(): void {
+	public onDeactivateFocusTrap(): void {
 		if ( ! this.mobileMenu || ! this.hamburger ) return;
 
 		enableBodyScroll( this.mobileMenu );
@@ -118,7 +131,7 @@ export class A11yMobileMenu {
 		this.mobileMenu.setAttribute( 'aria-hidden', 'true' );
 
 		this.mobileMenu.animate(
-			[
+			this.onDeactivateFocusTrapAnimate?.keyframes ?? [
 				{
 					transform: 'translateX(0)',
 					opacity: '1',
@@ -130,7 +143,7 @@ export class A11yMobileMenu {
 					visibility: 'hidden',
 				},
 			],
-			{
+			this.onDeactivateFocusTrapAnimate?.options ?? {
 				duration: 500,
 				easing: 'ease-out',
 				fill: 'both',

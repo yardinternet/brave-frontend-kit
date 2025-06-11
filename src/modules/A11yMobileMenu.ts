@@ -9,7 +9,7 @@ interface MobileAnimate {
 
 interface A11yMobileMenuOptions {
 	selectorPrefix?: string;
-	focusTrapOptions: focusTrap.Options;
+	focusTrapOptions?: focusTrap.Options;
 	onActivateFocusTrapAnimate?: MobileAnimate;
 	onDeactivateFocusTrapAnimate?: MobileAnimate;
 }
@@ -185,7 +185,7 @@ export class A11yMobileMenu {
 		const isOpen = link.getAttribute( 'aria-expanded' ) === 'true';
 		link.setAttribute( 'aria-expanded', String( ! isOpen ) );
 
-		item.classList.toggle( 'show-sub-menu' );
+		item.classList.toggle( `#${ this.selectorPrefix }-show-sub-menu` );
 	}
 
 	/**
@@ -197,7 +197,7 @@ export class A11yMobileMenu {
 			if ( link ) {
 				link.setAttribute( 'aria-expanded', 'false' );
 			}
-			item.classList.remove( 'show-sub-menu' );
+			item.classList.remove( `#${ this.selectorPrefix }-show-sub-menu` );
 		} );
 	}
 }

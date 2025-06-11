@@ -114,7 +114,7 @@ new WebShareApi( {
 
 ### `A11yFacetWP`
 
-Enhances A11yFacetWP search pages. Adds scroll to top, aria labels, focus change on pager, hides label on filter and reset filters if no filters selected.
+Enhances FacetWP search pages. Adds scroll to top, aria labels, focus change on pager, hides label on filter and reset filters if no filters selected.
 
 #### Usage
 
@@ -128,6 +128,46 @@ new A11yFacetWP();
 new A11yFacetWP({
     selectorPrefix: 'js',
     scrollToTopOffset: 150,
+});
+```
+
+### `A11yMobileMenu`
+
+Enhances mobile menu. Adds expand, open & close buttons, aria labels, animations and focus trap. 
+
+#### Usage
+
+```javascript
+import { A11yMobileMenu } from '@yardinternet/brave-frontend-kit';
+
+// Basic usage
+new A11yMobileMenu();
+
+// Extended usage: all options
+new A11yMobileMenu({
+    selectorPrefix: 'js',
+    onActivateFocusTrapAnimate: {
+        keyframes:  [
+            {
+                transform: 'translateX(100%)',
+                opacity: '0',
+                visibility: 'hidden',
+            },
+            {
+                transform: 'translateX(0)',
+                opacity: '1',
+                visibility: 'visible',
+            },
+        ],
+        options: {
+            duration: 500,
+            easing: 'cubic-bezier(0.22,1,0.36,1)',
+            fill: 'both',
+        }
+    },
+
+    [...]
+
 });
 ```
 

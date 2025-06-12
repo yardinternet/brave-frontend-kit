@@ -1,5 +1,5 @@
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
-import * as focusTrap from 'focus-trap';
+import { createFocusTrap, type Options, type FocusTrap } from 'focus-trap';
 import { checkCanFocusTrap } from '@utils/focus-trap.ts';
 
 interface MobileAnimate {
@@ -9,38 +9,27 @@ interface MobileAnimate {
 
 interface A11yMobileMenuOptions {
 	selectorPrefix?: string;
-	focusTrapOptions?: focusTrap.Options;
+	focusTrapOptions?: Options;
 	onActivateFocusTrapAnimate?: MobileAnimate;
 	onDeactivateFocusTrapAnimate?: MobileAnimate;
 }
 
 export class A11yMobileMenu {
-	private focusTrapMobileMenu: focusTrap.FocusTrap | null = null;
-	private closeBtn: HTMLElement | null;
-	private hamburger: HTMLElement | null;
-	private mobileMenu: HTMLElement | null;
-	private expandableMenuItems: NodeListOf< Element >;
-	private focusTrapOptions: focusTrap.Options;
-	private onDeactivateFocusTrapAnimate: MobileAnimate | null;
-	private onActivateFocusTrapAnimate: MobileAnimate | null;
+	private focusTrapMobileMenu: FocusTrap | null = null;
+	private readonly closeBtn: HTMLElement | null;
+	private readonly hamburger: HTMLElement | null;
+	private readonly mobileMenu: HTMLElement | null;
+	private readonly expandableMenuItems: NodeListOf< Element >;
+	private readonly selectorPrefix;
+	private readonly focusTrapOptions;
+	private readonly onActivateFocusTrapAnimate;
+	private readonly onDeactivateFocusTrapAnimate;
 
-	public readonly selectorPrefix: string;
-
-	constructor(
-		options: A11yMobileMenuOptions = {
-			focusTrapOptions: {
-				allowOutsideClick: true,
-				checkCanFocusTrap,
-				onActivate: () => this.onActivateFocusTrap(),
-				onDeactivate: () => this.onDeactivateFocusTrap(),
-			},
-		}
-	) {
+	constructor( options: A11yMobileMenuOptions = {} ) {
 		this.selectorPrefix = options.selectorPrefix || 'js-brave';
-		this.onActivateFocusTrapAnimate =
-			options?.onActivateFocusTrapAnimate || null;
+		this.onActivateFocusTrapAnimate = options.onActivateFocusTrapAnimate;
 		this.onDeactivateFocusTrapAnimate =
-			options?.onDeactivateFocusTrapAnimate || null;
+			options.onDeactivateFocusTrapAnimate;
 
 		this.closeBtn = document.querySelector(
 			`#${ this.selectorPrefix }-mobile-menu-close-btn`
@@ -55,7 +44,12 @@ export class A11yMobileMenu {
 			'.mobile-menu .menu-item-has-children'
 		);
 
-		this.focusTrapOptions = options.focusTrapOptions;
+		this.focusTrapOptions = options.focusTrapOptions || {
+			allowOutsideClick: true,
+			checkCanFocusTrap,
+			onActivate: (): void => this.onActivateFocusTrap(),
+			onDeactivate: (): void => this.onDeactivateFocusTrap(),
+		};
 
 		this.bindEvents();
 	}
@@ -63,7 +57,7 @@ export class A11yMobileMenu {
 	private bindEvents(): void {
 		if ( ! this.closeBtn || ! this.hamburger || ! this.mobileMenu ) return;
 
-		this.focusTrapMobileMenu = focusTrap.createFocusTrap(
+		this.focusTrapMobileMenu = createFocusTrap(
 			this.mobileMenu,
 			this.focusTrapOptions
 		);
@@ -72,9 +66,10 @@ export class A11yMobileMenu {
 			'click',
 			() => this.focusTrapMobileMenu?.deactivate()
 		);
+
 		this.hamburger.addEventListener( 'click', () => {
 			if ( this.focusTrapMobileMenu?.active ) {
-				this.focusTrapMobileMenu.deactivate();
+				this.focusTrapMobileMenu?.deactivate();
 			} else {
 				this.focusTrapMobileMenu?.activate();
 			}
@@ -87,15 +82,13 @@ export class A11yMobileMenu {
 	 * Show mobile menu. Lock body scroll and add correct aria attributes.
 	 */
 	private onActivateFocusTrap(): void {
-		if ( ! this.mobileMenu || ! this.hamburger ) return;
+		disableBodyScroll( this.mobileMenu! );
 
-		disableBodyScroll( this.mobileMenu );
+		this.hamburger!.setAttribute( 'aria-expanded', 'true' );
+		this.hamburger!.setAttribute( 'aria-label', 'Sluit menu' );
+		this.mobileMenu!.setAttribute( 'aria-hidden', 'false' );
 
-		this.hamburger.setAttribute( 'aria-expanded', 'true' );
-		this.hamburger.setAttribute( 'aria-label', 'Sluit menu' );
-		this.mobileMenu.setAttribute( 'aria-hidden', 'false' );
-
-		this.mobileMenu.animate(
+		this.mobileMenu!.animate(
 			this.onActivateFocusTrapAnimate?.keyframes ?? [
 				{
 					transform: 'translateX(100%)',
@@ -120,17 +113,21 @@ export class A11yMobileMenu {
 	 * Hide mobile menu. Unlock body scroll and add correct aria attributes.
 	 */
 	public onDeactivateFocusTrap(): void {
-		if ( ! this.mobileMenu || ! this.hamburger ) return;
-
-		enableBodyScroll( this.mobileMenu );
+		enableBodyScroll( this.mobileMenu! );
 
 		this.closeAllExpandableMenuItems();
 
-		this.hamburger.setAttribute( 'aria-expanded', 'false' );
-		this.hamburger.setAttribute( 'aria-label', 'Open menu' );
-		this.mobileMenu.setAttribute( 'aria-hidden', 'true' );
+		/**
+		 * This timeout is necessary to ensure that the aria-hidden attribute is set after the animation completes.
+		 * This is a workaround for a known issue where setting aria-hidden on an element that has focus can cause accessibility issues.
+		 */
+		setTimeout( () => {
+			this.hamburger!.setAttribute( 'aria-expanded', 'false' );
+			this.hamburger!.setAttribute( 'aria-label', 'Open menu' );
+			this.mobileMenu!.setAttribute( 'aria-hidden', 'true' );
+		}, 1 );
 
-		this.mobileMenu.animate(
+		this.mobileMenu!.animate(
 			this.onDeactivateFocusTrapAnimate?.keyframes ?? [
 				{
 					transform: 'translateX(0)',
@@ -163,11 +160,7 @@ export class A11yMobileMenu {
 			link.setAttribute( 'aria-expanded', 'false' );
 
 			link.addEventListener( 'click', ( event ) =>
-				this.onClickExpandableMenuItem(
-					event,
-					item,
-					link as HTMLElement
-				)
+				this.onClickExpandableMenuItem( event, item, link )
 			);
 		} );
 	}
@@ -178,7 +171,7 @@ export class A11yMobileMenu {
 	private onClickExpandableMenuItem(
 		event: Event,
 		item: Element,
-		link: HTMLElement
+		link: HTMLAnchorElement
 	): void {
 		event.preventDefault();
 

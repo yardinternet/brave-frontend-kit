@@ -1,8 +1,5 @@
 /**
  * Gets keyboard-focusable elements within a specified element.
- *
- * @param {HTMLElement} element The element to search within.
- * @return {HTMLElement[]} Array of focusable elements
  */
 export const findTabbable = ( element: HTMLElement ): HTMLElement[] => {
 	const tabbableElements = element.querySelectorAll(
@@ -21,9 +18,6 @@ export const findTabbable = ( element: HTMLElement ): HTMLElement[] => {
 
 /**
  * Gets the first keyboard-focusable element within a specified element.
- *
- * @param {HTMLElement} element The element to search within.
- * @return {HTMLElement|null} The first focusable element
  */
 export const findFirstTabbable = (
 	element: HTMLElement
@@ -35,12 +29,11 @@ export const findFirstTabbable = (
 
 /**
  * Transform the tag of an element to another tag, e.g. <p> to <h2>.
- *
- * @param {Element} element     The element to transform
- * @param {string}  transformTo Tag to transform to (e.g. 'h2')
- * @return {HTMLElement|null} Transformed element
  */
-export const transformTag = ( element: Element, transformTo: string ) => {
+export const transformTag = (
+	element: Element,
+	transformTo: string
+): HTMLElement | null => {
 	if ( ! element ) return null;
 
 	const transformedElement = document.createElement( transformTo );

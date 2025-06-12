@@ -1,15 +1,15 @@
 import { findFirstTabbable } from '@utils/a11y.ts';
 
-interface FacetWPOptions {
+interface A11yFacetWPOptions {
 	selectorPrefix?: string;
 	scrollToTopOffset?: number; // Adjust this number to alter final scroll to top position
 }
 
 export class A11yFacetWP {
-	public readonly selectorPrefix: string;
-	public readonly scrollToTopOffset: number;
+	private readonly selectorPrefix;
+	private readonly scrollToTopOffset;
 
-	constructor( options: FacetWPOptions = {} ) {
+	constructor( options: A11yFacetWPOptions = {} ) {
 		this.selectorPrefix = options.selectorPrefix || 'js-brave';
 		this.scrollToTopOffset = options.scrollToTopOffset || 150;
 
@@ -60,7 +60,7 @@ export class A11yFacetWP {
 	}
 
 	public scrollToElementTop( elementTop: number ): void {
-		if ( ! ( window as any )?.FWP?.loaded ) return;
+		if ( ! window.FWP?.loaded ) return;
 
 		const position = elementTop - this.scrollToTopOffset;
 
@@ -78,7 +78,7 @@ export class A11yFacetWP {
 	private addAriaLabelToSearch(): void {
 		const searchInput = document.querySelector(
 			'.facetwp-search'
-		) as HTMLElement | null;
+		) as HTMLInputElement | null;
 		if ( ! searchInput ) return;
 
 		const placeholder = searchInput.getAttribute( 'placeholder' );
@@ -122,7 +122,8 @@ export class A11yFacetWP {
 	 * A11y: change tab focus when using pager
 	 */
 	private changeTabFocusPager(): void {
-		const pagerButtons = document.querySelectorAll( '.facetwp-page' );
+		const pagerButtons =
+			document.querySelectorAll< HTMLAnchorElement >( '.facetwp-page' );
 		if ( pagerButtons.length === 0 ) return;
 
 		pagerButtons.forEach( ( pager ) => {
@@ -139,6 +140,8 @@ export class A11yFacetWP {
 			const template = document.getElementById(
 				this.selectorPrefix + '-facetwp-template-view'
 			);
+			if ( ! template ) return;
+
 			const firstTabbable = findFirstTabbable( template );
 			firstTabbable?.focus();
 		}, 500 );
@@ -154,7 +157,7 @@ export class A11yFacetWP {
 
 		if ( filterElements.length === 0 ) return;
 
-		const queryString = ( window as any ).FWP.buildQueryString();
+		const queryString = window.FWP?.buildQueryString();
 
 		/**
 		 * The following strings should be checked with this regex:

@@ -3,7 +3,7 @@ interface FocusStyleOptions {
 }
 
 export class FocusStyle {
-	private bodyClass: string;
+	private readonly bodyClass;
 	private isUsingKeyboard: boolean;
 
 	constructor( options: FocusStyleOptions = {} ) {
@@ -12,23 +12,23 @@ export class FocusStyle {
 		this.init();
 	}
 
-	private init() {
+	private init(): void {
 		this.bindEvents();
 	}
 
-	private bindEvents() {
+	private bindEvents(): void {
 		document.addEventListener( 'keydown', this.handleKeyDown );
 		document.addEventListener( 'mousedown', this.handleMouseDown );
 	}
 
-	private handleKeyDown = ( e: KeyboardEvent ) => {
+	private handleKeyDown = ( e: KeyboardEvent ): void => {
 		if ( e.key !== 'Tab' || this.isUsingKeyboard ) return;
 
 		this.isUsingKeyboard = true;
 		document.body.classList.add( this.bodyClass );
 	};
 
-	private handleMouseDown = () => {
+	private handleMouseDown = (): void => {
 		if ( ! this.isUsingKeyboard ) return;
 
 		this.isUsingKeyboard = false;

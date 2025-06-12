@@ -1,9 +1,7 @@
 /**
  * Converts a string to a slug format.
- *
- * @param {string} text - The string to convert.
  */
-const slugify = ( text: string | undefined ) => {
+export const slugify = ( text: string | undefined ): string => {
 	if ( ! text ) return '';
 	return text
 		.toString() // Cast to string (optional)
@@ -15,5 +13,3 @@ const slugify = ( text: string | undefined ) => {
 		.replace( /\-\-+/g, '-' ) // eslint-disable-line no-useless-escape
 		.replace( /\-$/, '' ); // eslint-disable-line no-useless-escape
 };
-
-export { slugify };

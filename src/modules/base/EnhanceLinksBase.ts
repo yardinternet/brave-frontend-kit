@@ -7,11 +7,11 @@ export interface EnhanceLinksBaseOptions {
 }
 
 export abstract class EnhanceLinksBase {
-	protected selector: string;
-	protected excludedClasses: string[];
-	protected excludedUrlKeywords: string[];
-	protected icon: string | SVGElement | null;
-	protected insertIconBeforeText: boolean;
+	protected readonly selector;
+	protected readonly excludedClasses;
+	protected readonly excludedUrlKeywords;
+	protected readonly icon;
+	protected readonly insertIconBeforeText;
 
 	constructor( options: EnhanceLinksBaseOptions = {} ) {
 		this.selector = options.selector || '';
@@ -37,7 +37,7 @@ export abstract class EnhanceLinksBase {
 		);
 	}
 
-	protected insertIcon( link: HTMLAnchorElement ) {
+	protected insertIcon( link: HTMLAnchorElement ): void {
 		if ( ! this.icon ) return;
 
 		// Check if the icon is a string (HTML) or an SVG element

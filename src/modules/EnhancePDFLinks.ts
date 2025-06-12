@@ -11,9 +11,9 @@ interface EnhancePDFLinksOptions extends EnhanceLinksBaseOptions {
 }
 
 export class EnhancePDFLinks extends EnhanceLinksBase {
-	private showFileSize: boolean;
-	private fileSizeClass: string;
-	private createFileSizeElementFn?: ( sizeInBytes: number ) => HTMLElement;
+	private readonly showFileSize;
+	private readonly fileSizeClass;
+	private readonly createFileSizeElementFn;
 
 	constructor( options: EnhancePDFLinksOptions = {} ) {
 		super( options );
@@ -52,7 +52,7 @@ export class EnhancePDFLinks extends EnhanceLinksBase {
 		const request = new XMLHttpRequest();
 		request.open( 'HEAD', link.href, true );
 
-		request.onreadystatechange = () => {
+		request.onreadystatechange = (): void => {
 			if (
 				request.readyState !== 4 ||
 				request.status !== 200 ||

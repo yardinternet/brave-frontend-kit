@@ -3,14 +3,14 @@ interface WebShareApiOptions {
 }
 
 export class WebShareApi {
-	private selector: string;
+	private readonly selector;
 
 	constructor( options: WebShareApiOptions = {} ) {
 		this.selector = options.selector || '.js-web-share-api';
 		this.init();
 	}
 
-	private init() {
+	private init(): void {
 		const buttons = document.querySelectorAll< HTMLButtonElement >(
 			this.selector
 		);

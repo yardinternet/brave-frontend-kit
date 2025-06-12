@@ -6,7 +6,7 @@ export class EnhanceExternalLinks extends EnhanceLinksBase {
 		this.init();
 	}
 
-	protected init() {
+	protected init(): void {
 		const links = document.querySelectorAll< HTMLAnchorElement >(
 			this.selector
 		);
@@ -29,7 +29,7 @@ export class EnhanceExternalLinks extends EnhanceLinksBase {
 		} );
 	}
 
-	protected insertSrOnlyText( link: HTMLAnchorElement, text: string ) {
+	private insertSrOnlyText( link: HTMLAnchorElement, text: string ): void {
 		const srOnlyText = document.createElement( 'span' );
 		srOnlyText.classList.add( 'sr-only' );
 		srOnlyText.textContent = text;

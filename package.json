@@ -18,6 +18,7 @@
 		"start": "WATCH=true vite build",
 		"build": "vite build",
 		"test": "vitest",
+		"lint": "wp-scripts lint-js './src/**/*.ts'",
 		"format": "yard-toolkit format js -m custom './src/**/*.ts'",
 		"prepare": "husky"
 	},

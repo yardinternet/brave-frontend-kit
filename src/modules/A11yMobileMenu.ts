@@ -86,7 +86,6 @@ export class A11yMobileMenu {
 
 		this.hamburger!.setAttribute( 'aria-expanded', 'true' );
 		this.hamburger!.setAttribute( 'aria-label', 'Sluit menu' );
-		this.mobileMenu!.setAttribute( 'aria-hidden', 'false' );
 
 		this.mobileMenu!.animate(
 			this.onActivateFocusTrapAnimate?.keyframes ?? [
@@ -124,7 +123,6 @@ export class A11yMobileMenu {
 		setTimeout( () => {
 			this.hamburger!.setAttribute( 'aria-expanded', 'false' );
 			this.hamburger!.setAttribute( 'aria-label', 'Open menu' );
-			this.mobileMenu!.setAttribute( 'aria-hidden', 'true' );
 		}, 1 );
 
 		this.mobileMenu!.animate(

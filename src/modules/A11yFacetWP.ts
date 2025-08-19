@@ -27,6 +27,11 @@ export class A11yFacetWP {
 		document.addEventListener( 'facetwp-loaded', ( e: Event ) =>
 			this.onFacetLoad( e )
 		);
+
+		// Catch up if facets already loaded, needed for Vite
+		if ( window.FWP && window.FWP.loaded ) {
+			this.onFacetLoad();
+		}
 	}
 
 	private onFacetRefresh(): void {
@@ -37,14 +42,14 @@ export class A11yFacetWP {
 		view.classList.add( 'loading' );
 	}
 
-	private onFacetLoad( e: Event ): void {
+	private onFacetLoad( e?: Event ): void {
 		const view = document.getElementById(
 			this.selectorPrefix + '-facetwp-template-view'
 		);
 		if ( ! view ) return;
 		view.classList.remove( 'loading' );
 
-		e.preventDefault();
+		if ( e ) e.preventDefault();
 		this.scrollToElementTop( view.getBoundingClientRect().top );
 		this.addAriaLabelToSearch();
 		this.changeTabFocusPager();

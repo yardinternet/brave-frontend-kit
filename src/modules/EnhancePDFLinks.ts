@@ -36,7 +36,8 @@ export class EnhancePDFLinks extends EnhanceLinksBase {
 			if (
 				! href ||
 				! href.endsWith( '.pdf' ) ||
-				this.shouldIgnore( link, href )
+				this.shouldIgnore( link, href ) ||
+				! this.checkIfSameDomain( href )
 			)
 				return;
 
@@ -46,6 +47,15 @@ export class EnhancePDFLinks extends EnhanceLinksBase {
 				this.insertIcon( link );
 			}
 		} );
+	}
+
+	private checkIfSameDomain( href: string ): boolean {
+		try {
+			const linkUrl = new URL( href, window.location.href );
+			return linkUrl.hostname === window.location.hostname;
+		} catch {
+			return false;
+		}
 	}
 
 	private appendPdfFileSize( link: HTMLAnchorElement ): void {

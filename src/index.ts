@@ -6,6 +6,7 @@ import { EnhancePDFLinks } from '@modules/EnhancePDFLinks';
 import { WebShareApi } from '@modules/WebShareApi';
 import { findTabbable, findFirstTabbable, transformTag } from '@utils/a11y';
 import { checkCanFocusTrap } from '@utils/focus-trap';
+import { slugify } from '@utils/slugify';
 
 // Modules
 export {
@@ -18,4 +19,4 @@ export {
 };
 
 // Utils
-export { checkCanFocusTrap, findTabbable, findFirstTabbable, transformTag };
+export { checkCanFocusTrap, findTabbable, findFirstTabbable, transformTag,slugify  };

@@ -47,14 +47,20 @@ export abstract class EnhanceLinksBase {
 			const node = wrapper.firstElementChild;
 
 			if ( node ) {
-				this.insertIconBeforeText
-					? link.prepend( node )
-					: link.append( node );
+				if ( this.insertIconBeforeText ) {
+					link.prepend( node );
+				} else {
+					link.append( node );
+				}
 			}
-		} else {
-			this.insertIconBeforeText
-				? link.prepend( this.icon.cloneNode( true ) )
-				: link.append( this.icon.cloneNode( true ) );
+		}
+
+		if ( typeof this.icon !== 'string' ) {
+			if ( this.insertIconBeforeText ) {
+				link.prepend( this.icon.cloneNode( true ) );
+			} else {
+				link.append( this.icon.cloneNode( true ) );
+			}
 		}
 	}
 

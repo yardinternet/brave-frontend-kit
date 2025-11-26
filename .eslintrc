@@ -1,4 +1,11 @@
 {
+	"settings": {
+		"import/resolver": {
+			"typescript": {
+				"project": "./tsconfig.json"
+			}
+		}
+	},
 	"overrides": [
 		{
 			"files": [ "*.{ts,tsx}" ],

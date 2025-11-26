@@ -67,7 +67,7 @@ export class A11yFacetWP {
 	public scrollToElementTop( elementTop: number ): void {
 		if ( ! window.FWP?.loaded ) return;
 
-		const position = elementTop - this.scrollToTopOffset;
+		const position = elementTop + window.scrollY - this.scrollToTopOffset;
 
 		if ( window.scrollY < position ) return; // if top box already visible
 

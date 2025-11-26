@@ -92,7 +92,30 @@ describe( 'FacetWP', () => {
 		window.scrollY = 800;
 		const boxTop = 750;
 
-		const position = boxTop - 150;
+		vi.spyOn( window, 'scrollTo' ).mockImplementation(
+			( input ) => ( window.scrollY = input.top )
+		);
+
+		facetWP.scrollToElementTop( boxTop );
+
+		// window.scrollTo should NOT have been called
+		expect( window.scrollTo ).not.toHaveBeenCalled();
+
+		// scrollY should remain unchanged
+		expect( window.scrollY ).toBe( window.scrollY );
+	} );
+
+	it( 'should scroll to top if scrollY is passed than boxTop', () => {
+		const facetWP = new A11yFacetWP();
+
+		window.FWP = {
+			loaded: true,
+		};
+
+		window.scrollY = 800;
+		const boxTop = -100;
+
+		const position = boxTop + window.scrollY - 150;
 
 		vi.spyOn( window, 'scrollTo' ).mockImplementation(
 			( input ) => ( window.scrollY = input.top )

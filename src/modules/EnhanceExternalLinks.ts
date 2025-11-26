@@ -33,8 +33,10 @@ export class EnhanceExternalLinks extends EnhanceLinksBase {
 		const srOnlyText = document.createElement( 'span' );
 		srOnlyText.classList.add( 'sr-only' );
 		srOnlyText.textContent = text;
-		this.insertIconBeforeText
-			? link.prepend( srOnlyText )
-			: link.append( srOnlyText );
+		if ( this.insertIconBeforeText ) {
+			link.prepend( srOnlyText );
+		} else {
+			link.append( srOnlyText );
+		}
 	}
 }

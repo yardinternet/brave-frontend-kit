@@ -19,4 +19,10 @@ export {
 };
 
 // Utils
-export { checkCanFocusTrap, findTabbable, findFirstTabbable, transformTag,slugify  };
+export {
+	checkCanFocusTrap,
+	findTabbable,
+	findFirstTabbable,
+	transformTag,
+	slugify,
+};

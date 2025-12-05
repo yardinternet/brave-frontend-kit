@@ -4,6 +4,7 @@
 	"type": "module",
 	"main": "dist/brave-frontend-kit.umd.cjs",
 	"module": "dist/brave-frontend-kit.js",
+	"license": "EUPL-1.2",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/yardinternet/brave-frontend-kit.git"

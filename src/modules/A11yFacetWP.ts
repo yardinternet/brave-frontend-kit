@@ -59,6 +59,7 @@ export class A11yFacetWP {
 		 * This timeout is necessary because otherwise it will be called too early
 		 */
 		setTimeout( () => {
+			this.removeRoleNavigationFromPager();
 			this.addAriaCurrentToPager();
 			this.changeAriaLabelSelections();
 		}, 1 );
@@ -93,6 +94,18 @@ export class A11yFacetWP {
 			searchInput.setAttribute( 'aria-label', placeholder );
 		} else {
 			searchInput.setAttribute( 'aria-label', 'Zoek op trefwoord' );
+		}
+	}
+
+	/**
+	 * A11y: remove 'role=navigation' from FacetWP pager if it is inside a <nav> element.
+	 */
+	private removeRoleNavigationFromPager(): void {
+		const pager = document.querySelector( '.facetwp-pager' );
+		if ( ! pager ) return;
+
+		if ( pager.parentElement?.tagName.toLowerCase() === 'nav' ) {
+			pager.removeAttribute( 'role' );
 		}
 	}
 

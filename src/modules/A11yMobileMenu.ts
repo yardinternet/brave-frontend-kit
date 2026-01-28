@@ -55,6 +55,8 @@ export class A11yMobileMenu {
 	}
 
 	private bindEvents(): void {
+		this.initExpandableMenuItems(); // @todo: is necessary for the new dialog mobile menu
+
 		if ( ! this.closeBtn || ! this.hamburger || ! this.mobileMenu ) return;
 
 		this.focusTrapMobileMenu = createFocusTrap(
@@ -74,8 +76,6 @@ export class A11yMobileMenu {
 				this.focusTrapMobileMenu?.activate();
 			}
 		} );
-
-		this.initExpandableMenuItems();
 	}
 
 	/**

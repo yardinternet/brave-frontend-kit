@@ -10,35 +10,18 @@ import { createFocusTrap, type Options, type FocusTrap } from 'focus-trap';
 import { checkCanFocusTrap } from '@utils/focus-trap.ts';
 
 export class Dialog {
-	private readonly OPEN_BUTTON_SELECTOR = 'button[data-dialog-id]';
-	private readonly CLOSE_BUTTON_SELECTOR = '.js-dialog-close-button';
+	private readonly DIALOG_SELECTOR = '.js-brave-dialog';
 
 	constructor() {
-		const openButtons = this.getOpenButtons();
-		if ( openButtons.length === 0 ) return;
-
-		openButtons.forEach( ( openButton: HTMLButtonElement ) => {
-			const dialogId = openButton.getAttribute( 'data-dialog-id' );
-			if ( ! dialogId ) return;
-
-			const dialogElement = document.getElementById( dialogId );
-			if ( ! dialogElement ) return;
-
-			this.initDialog( dialogElement as HTMLDialogElement, openButton );
-		} );
-	}
-
-	private getOpenButtons(): NodeListOf< HTMLButtonElement > {
-		return document.querySelectorAll< HTMLButtonElement >(
-			this.OPEN_BUTTON_SELECTOR
+		const dialogs = document.querySelectorAll< HTMLDialogElement >(
+			this.DIALOG_SELECTOR
 		);
+
+		dialogs.forEach( ( dialog ) => this.initDialog( dialog ) );
 	}
 
-	private initDialog(
-		dialog: HTMLDialogElement,
-		openButton: HTMLButtonElement
-	): void {
-		const focusTrapSettings: Options = {
+	private initDialog( dialog: HTMLDialogElement ): void {
+		const focusTrapOptions: Options = {
 			clickOutsideDeactivates: true,
 			checkCanFocusTrap,
 			onActivate: (): void => {
@@ -53,20 +36,27 @@ export class Dialog {
 
 		const focusTrapDialog: FocusTrap = createFocusTrap(
 			dialog,
-			focusTrapSettings
+			focusTrapOptions
 		);
 
-		openButton.addEventListener( 'click', (): void => {
-			focusTrapDialog.activate();
-		} );
+		this.initDialogTriggers( dialog, focusTrapDialog );
+	}
 
-		const closeButtons = dialog.querySelectorAll< HTMLElement >(
-			this.CLOSE_BUTTON_SELECTOR
+	private initDialogTriggers(
+		dialog: HTMLDialogElement,
+		focusTrapDialog: FocusTrap
+	): void {
+		const triggers = document.querySelectorAll< HTMLElement >(
+			`[data-dialog-id="${ dialog.id }"]`
 		);
 
-		closeButtons.forEach( ( closeButton: HTMLElement ) => {
-			closeButton.addEventListener( 'click', (): void => {
-				focusTrapDialog.deactivate();
+		triggers.forEach( ( trigger: HTMLElement ) => {
+			trigger.addEventListener( 'click', (): void => {
+				if ( focusTrapDialog.active ) {
+					focusTrapDialog.deactivate();
+				} else {
+					focusTrapDialog.activate();
+				}
 			} );
 		} );
 	}

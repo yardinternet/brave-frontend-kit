@@ -30,6 +30,32 @@ const customFocusStyle = new FocusStyle( {
 } );
 ```
 
+### `DialogManager`
+
+Manages multiple dialog instances on a page, allowing for easy opening, closing, and toggling of dialogs by their IDs.
+
+#### Usage
+
+```javascript
+import { DialogManager } from '@yardinternet/brave-frontend-kit';
+
+// Basic usage
+new DialogManager();
+
+// Extended usage: all options
+const dialogs = new DialogManager( {
+  selector: '.js-brave-dialog',
+} );
+
+// To open, close or toggle a dialog with a specific ID
+dialogs.open( 'js-brave-mobile-menu' );
+dialogs.close( 'js-brave-mobile-menu' );
+dialogs.toggle( 'js-brave-mobile-menu' );
+
+// To close all open dialogs
+dialogs.closeAll();
+```
+
 ### `EnhanceExternalLinks`
 
 ![EnhanceExternalLinks Example](./docs/example-enhance-external-link.png)
@@ -133,7 +159,7 @@ new A11yFacetWP({
 
 ### `A11yMobileMenu`
 
-Enhances mobile menu. Adds expand, open & close buttons, aria labels, animations and focus trap. 
+Enhances mobile menu. Adds expand, open & close buttons, aria labels, animations and focus trap.
 
 #### Usage
 

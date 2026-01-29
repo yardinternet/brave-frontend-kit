@@ -10,54 +10,53 @@ import { createFocusTrap, type Options, type FocusTrap } from 'focus-trap';
 import { checkCanFocusTrap } from '@utils/focus-trap.ts';
 
 export class Dialog {
-	private readonly DIALOG_SELECTOR = '.js-brave-dialog';
+	private focusTrap: FocusTrap;
 
-	constructor() {
-		const dialogs = document.querySelectorAll< HTMLDialogElement >(
-			this.DIALOG_SELECTOR
-		);
-
-		dialogs.forEach( ( dialog ) => this.initDialog( dialog ) );
-	}
-
-	private initDialog( dialog: HTMLDialogElement ): void {
+	constructor( private dialog: HTMLDialogElement ) {
 		const focusTrapOptions: Options = {
 			clickOutsideDeactivates: true,
 			checkCanFocusTrap,
-			onActivate: (): void => {
-				dialog.showModal();
-				disableBodyScroll( dialog );
+			onActivate: () => {
+				this.dialog.showModal();
+				disableBodyScroll( this.dialog );
 			},
-			onDeactivate: (): void => {
-				dialog.close();
-				enableBodyScroll( dialog );
+			onDeactivate: () => {
+				this.dialog.close();
+				enableBodyScroll( this.dialog );
 			},
 		};
 
-		const focusTrapDialog: FocusTrap = createFocusTrap(
-			dialog,
-			focusTrapOptions
-		);
-
-		this.initDialogTriggers( dialog, focusTrapDialog );
+		this.focusTrap = createFocusTrap( this.dialog, focusTrapOptions );
+		this.initTriggers();
 	}
 
-	private initDialogTriggers(
-		dialog: HTMLDialogElement,
-		focusTrapDialog: FocusTrap
-	): void {
+	private initTriggers(): void {
 		const triggers = document.querySelectorAll< HTMLElement >(
-			`[data-dialog-id="${ dialog.id }"]`
+			`[data-dialog-id="${ this.dialog.id }"]`
 		);
 
-		triggers.forEach( ( trigger: HTMLElement ) => {
-			trigger.addEventListener( 'click', (): void => {
-				if ( focusTrapDialog.active ) {
-					focusTrapDialog.deactivate();
-				} else {
-					focusTrapDialog.activate();
-				}
-			} );
+		triggers.forEach( ( trigger ) => {
+			trigger.addEventListener( 'click', () => this.toggle() );
 		} );
+	}
+
+	isActive(): boolean {
+		return this.focusTrap.active;
+	}
+
+	open(): void {
+		if ( ! this.isActive() ) {
+			this.focusTrap.activate();
+		}
+	}
+
+	close(): void {
+		if ( this.isActive() ) {
+			this.focusTrap.deactivate();
+		}
+	}
+
+	toggle(): void {
+		this.isActive() ? this.close() : this.open();
 	}
 }

@@ -54,6 +54,7 @@ export class A11yFacetWP {
 		this.addAriaLabelToSearch();
 		this.changeTabFocusPager();
 		this.toggleFilterLabelAndButton();
+		this.updateShowMoreLabels();
 
 		/**
 		 * This timeout is necessary because otherwise it will be called too early
@@ -62,6 +63,7 @@ export class A11yFacetWP {
 			this.removeRoleNavigationFromPager();
 			this.addAriaCurrentToPager();
 			this.changeAriaLabelSelections();
+			this.updatePagerRoleAttr();
 		}, 1 );
 	}
 
@@ -190,6 +192,56 @@ export class A11yFacetWP {
 
 		filterElements.forEach( ( filterElement ) => {
 			filterElement.classList.toggle( 'hidden', ! shouldShowElement );
+		} );
+	}
+
+	/**
+	 * Append filter group name to "Toon X meer" toggle links
+	 */
+	private updateShowMoreLabels(): void {
+		const toggles = document.querySelectorAll(
+			'.facetwp-toggle:not(.facetwp-hidden)'
+		);
+		toggles.forEach( ( toggle ) => {
+			const match = toggle.textContent.match( /^Toon (\d+) meer$/i );
+
+			if ( match ) {
+				const legend = toggle
+					.closest( 'fieldset' )
+					?.querySelector( 'legend' );
+
+				if ( ! legend ) {
+					return;
+				}
+
+				const label = legend.innerText
+					.trim()
+					.toLowerCase()
+					.replace( /['’]/g, '' );
+
+				const newLabel = `Toon ${ match[ 1 ] } meer${
+					label ? ' ' + label : ''
+				}`;
+
+				toggle.textContent = newLabel;
+				toggle.setAttribute( 'aria-label', newLabel );
+			}
+		} );
+	}
+
+	/**
+	 * FacetWP adds a role="navigation" to the pager itself, which is incorrect.
+	 * The role should be on the parent element that wraps the pager.
+	 */
+	private updatePagerRoleAttr(): void {
+		const pagers = document.querySelectorAll( '.facetwp-pager' );
+		pagers.forEach( ( pager ) => {
+			const parent = pager.closest( '.facetwp-facet-pagination' );
+			pager.removeAttribute( 'role' );
+			if ( parent ) {
+				parent.setAttribute( 'role', 'navigation' );
+				parent.setAttribute( 'aria-label', 'Paginering' );
+			}
 		} );
 	}
 }

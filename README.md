@@ -197,24 +197,6 @@ new A11yMobileMenu({
 });
 ```
 
-### `ReadSpeaker`
-
-Enhances ReadSpeaker.
-
-#### Usage
-
-```javascript
-import { ReadSpeaker } from '@yardinternet/brave-frontend-kit';
-
-// Basic usage
-new ReadSpeaker();
-
-// Extended usage: all options
-new ReadSpeaker( {
-	timeout: 123,
-} );
-```
-
 ## 🛠️ Utils
 
 TBA

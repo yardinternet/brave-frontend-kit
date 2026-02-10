@@ -63,7 +63,6 @@ export class A11yFacetWP {
 			this.removeRoleNavigationFromPager();
 			this.addAriaCurrentToPager();
 			this.changeAriaLabelSelections();
-			this.updatePagerRoleAttr();
 		}, 1 );
 	}
 
@@ -214,7 +213,7 @@ export class A11yFacetWP {
 					return;
 				}
 
-				const label = legend.innerText
+				const label = legend.textContent
 					.trim()
 					.toLowerCase()
 					.replace( /['’]/g, '' );
@@ -225,22 +224,6 @@ export class A11yFacetWP {
 
 				toggle.textContent = newLabel;
 				toggle.setAttribute( 'aria-label', newLabel );
-			}
-		} );
-	}
-
-	/**
-	 * FacetWP adds a role="navigation" to the pager itself, which is incorrect.
-	 * The role should be on the parent element that wraps the pager.
-	 */
-	private updatePagerRoleAttr(): void {
-		const pagers = document.querySelectorAll( '.facetwp-pager' );
-		pagers.forEach( ( pager ) => {
-			const parent = pager.closest( '.facetwp-facet-pagination' );
-			pager.removeAttribute( 'role' );
-			if ( parent ) {
-				parent.setAttribute( 'role', 'navigation' );
-				parent.setAttribute( 'aria-label', 'Paginering' );
 			}
 		} );
 	}

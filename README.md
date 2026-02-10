@@ -26,7 +26,7 @@ const focusStyle = new FocusStyle();
 
 // Extended usage: all options
 const customFocusStyle = new FocusStyle( {
- bodyClass: 'custom-class',
+	bodyClass: 'custom-class',
 } );
 ```
 
@@ -44,7 +44,7 @@ new DialogManager();
 
 // Extended usage: all options
 const dialogs = new DialogManager( {
-  selector: '.js-brave-dialog',
+	selector: '.js-brave-dialog',
 } );
 
 // To open, close or toggle a dialog with a specific ID
@@ -69,17 +69,17 @@ import { EnhanceExternalLinks } from '@yardinternet/brave-frontend-kit';
 
 // Basic usage
 new EnhanceExternalLinks( {
-  selector: '.main a',
-  icon: '<i class="js-enhance-external-link-icon fa-light fa-arrow-up-right-from-square"></i>',
+	selector: '.main a',
+	icon: '<i class="js-enhance-external-link-icon fa-light fa-arrow-up-right-from-square"></i>',
 } );
 
 // Extended usage: all options
 new EnhanceExternalLinks( {
- selector: '.main a',
- icon: '<i class="fa-regular fa-up-right-from-square mx-2"></i>',
- excludedClasses: [ 'wp-block-button__link' ],
- excludedUrlKeywords: [ 'openpdc' ],
- insertIconBeforeText: true,
+	selector: '.main a',
+	icon: '<i class="fa-regular fa-up-right-from-square mx-2"></i>',
+	excludedClasses: [ 'wp-block-button__link' ],
+	excludedUrlKeywords: [ 'openpdc' ],
+	insertIconBeforeText: true,
 } );
 ```
 
@@ -134,7 +134,7 @@ new WebShareApi();
 
 // Extended usage: all options
 new WebShareApi( {
-  selector: '.js-web-share-api',
+	selector: '.js-web-share-api',
 } );
 ```
 
@@ -151,10 +151,10 @@ import { A11yFacetWP } from '@yardinternet/brave-frontend-kit';
 new A11yFacetWP();
 
 // Extended usage: all options
-new A11yFacetWP({
-    selectorPrefix: 'js',
-    scrollToTopOffset: 150,
-});
+new A11yFacetWP( {
+	selectorPrefix: 'js',
+	scrollToTopOffset: 150,
+} );
 ```
 
 ### `A11yMobileMenu`
@@ -195,6 +195,24 @@ new A11yMobileMenu({
     [...]
 
 });
+```
+
+### `ReadSpeaker`
+
+Enhances ReadSpeaker.
+
+#### Usage
+
+```javascript
+import { ReadSpeaker } from '@yardinternet/brave-frontend-kit';
+
+// Basic usage
+new ReadSpeaker();
+
+// Extended usage: all options
+new ReadSpeaker( {
+	timeout: 123,
+} );
 ```
 
 ## 🛠️ Utils

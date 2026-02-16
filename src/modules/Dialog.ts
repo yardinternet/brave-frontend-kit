@@ -11,23 +11,42 @@ import { checkCanFocusTrap } from '@utils/focus-trap.ts';
 
 export class Dialog {
 	private focusTrap: FocusTrap;
+	private useShow: boolean;
 
 	constructor( private dialog: HTMLDialogElement ) {
+		this.useShow = this.usesShow();
+
 		const focusTrapOptions: Options = {
 			clickOutsideDeactivates: true,
 			checkCanFocusTrap,
 			onActivate: () => {
-				this.dialog.showModal();
-				disableBodyScroll( this.dialog );
+				if ( this.useShow ) {
+					this.dialog.show();
+				} else {
+					this.dialog.showModal();
+					disableBodyScroll( this.dialog );
+				}
 			},
 			onDeactivate: () => {
 				this.dialog.close();
-				enableBodyScroll( this.dialog );
+				if ( ! this.useShow ) {
+					enableBodyScroll( this.dialog );
+				}
 			},
 		};
 
 		this.focusTrap = createFocusTrap( this.dialog, focusTrapOptions );
 		this.initTriggers();
+	}
+
+	/**
+	 * Use the `show()` method instead of `showModal()`, indicating a non-modal dialog.
+	 */
+	private usesShow(): boolean {
+		return (
+			this.dialog.hasAttribute( 'data-use-show' ) &&
+			this.dialog.getAttribute( 'data-use-show' ) !== 'false'
+		);
 	}
 
 	private initTriggers(): void {

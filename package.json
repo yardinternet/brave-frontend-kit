@@ -1,6 +1,6 @@
 {
 	"name": "@yardinternet/brave-frontend-kit",
-	"version": "0.7.2",
+	"version": "0.7.3",
 	"type": "module",
 	"main": "dist/brave-frontend-kit.umd.cjs",
 	"module": "dist/brave-frontend-kit.js",
@@ -41,5 +41,8 @@
 		"body-scroll-lock": "^4.0.0-beta.0",
 		"focus-trap": "^7.6.5",
 		"headroom.js": "^0.12.0"
+	},
+	"optionalDependencies":  {
+    	"@rollup/rollup-linux-arm64-gnu": "*"
 	}
 }

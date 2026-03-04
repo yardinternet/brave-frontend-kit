@@ -2,6 +2,8 @@ import { Accordion } from '@modules/Accordion';
 import { A11yCards } from '@modules/A11yCards';
 import { A11yFacetWP } from '@modules/A11yFacetWP';
 import { A11yMobileMenu } from '@modules/A11yMobileMenu';
+import { BraveNavigation } from '@modules/BraveNavigation';
+import { BraveNavigationManager } from '@modules/BraveNavigationManager';
 import { Dialog } from '@modules/Dialog';
 import { DialogManager } from '@modules/DialogManager';
 import { EnhanceExternalLinks } from '@modules/EnhanceExternalLinks';
@@ -19,6 +21,8 @@ export {
 	A11yCards,
 	A11yFacetWP,
 	A11yMobileMenu,
+	BraveNavigation,
+	BraveNavigationManager,
 	Dialog,
 	DialogManager,
 	EnhanceExternalLinks,

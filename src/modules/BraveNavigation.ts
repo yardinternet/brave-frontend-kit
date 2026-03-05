@@ -11,13 +11,13 @@ export class BraveNavigation {
 	private readonly classOpenMenu: string;
 
 	private readonly navigationItems: NodeListOf< HTMLElement >;
-	private readonly expandableNavigationItems: NodeListOf< HTMLElement >;
+	private readonly expandableNavigationItems: NodeListOf< HTMLAnchorElement >;
 
 	private readonly selectorNavigationItems: string;
 	private readonly selectorExpandableNavigationItems: string;
 	private readonly mode: DropdownMode;
 
-	private readonly persistentItems: Set< HTMLElement > = new Set();
+	private readonly persistentItems: Set< HTMLAnchorElement > = new Set();
 
 	constructor(
 		container: HTMLElement,
@@ -25,18 +25,21 @@ export class BraveNavigation {
 	) {
 		this.container = container;
 
+		// Regular nav items
 		this.selectorNavigationItems =
 			options.selectorNavigationItems || '.brave-nav-item';
+
 		this.selectorExpandableNavigationItems =
 			options.selectorExpandableNavigationItems ||
-			'.brave-nav-item-has-children';
-		this.classOpenMenu = options.classOpenMenu || 'js-brave-show-sub-menu';
+			'.brave-nav-link-has-children';
+
+		this.classOpenMenu = options.classOpenMenu || 'js-brave-show-dropdown';
 
 		this.navigationItems = this.container.querySelectorAll< HTMLElement >(
 			this.selectorNavigationItems
 		);
 		this.expandableNavigationItems =
-			this.container.querySelectorAll< HTMLElement >(
+			this.container.querySelectorAll< HTMLAnchorElement >(
 				this.selectorExpandableNavigationItems
 			);
 
@@ -46,15 +49,13 @@ export class BraveNavigation {
 	}
 
 	private detectMode(): DropdownMode {
-		const hasClickDropdown = this.container.querySelector(
-			'.brave-nav-dropdown-on-click'
+		const dropdown = this.container.querySelector< HTMLElement >(
+			'.brave-nav-dropdown'
 		);
 
-		if ( hasClickDropdown ) {
-			return 'click';
-		}
+		const mode = dropdown?.dataset.mode;
 
-		return 'hover';
+		return mode === 'hover' ? 'hover' : 'click';
 	}
 
 	private bindEvents(): void {
@@ -67,62 +68,76 @@ export class BraveNavigation {
 		this.initExpandableMenuItems();
 	}
 
+	/**
+	 * A11y: Check if escape key is pressed, then close all expandable items and set focus to parent link
+	 */
 	private onKeyUp( event: KeyboardEvent ): void {
 		if ( event.key !== 'Escape' ) return;
 
-		this.closeAllSubMenus();
+		this.closeAllDropdowns();
 
-		// Focus the first expanded link (if any)
-		const firstOpenItem = Array.from( this.expandableNavigationItems ).find(
-			( item ) => item.classList.contains( this.classOpenMenu )
-		);
-		const link =
-			firstOpenItem?.querySelector< HTMLElement >( '.brave-nav-link' );
+		let item: Element | null = null;
+		if ( event.target && event.target instanceof Element ) {
+			item = event.target.closest(
+				'.brave-nav-item:has(.brave-nav-link-has-children)'
+			);
+		}
+		if ( ! item ) return;
+
+		const link = item.querySelector( 'a' );
+
 		link?.focus();
 	}
 
+	/**
+	 * Close expandable items if there is clicked somewhere which is not a menu item
+	 */
 	private onClickDocument( event: MouseEvent ): void {
 		const target = event.target as Node;
-
 		if ( ! this.container.contains( target ) ) {
-			this.closeAllSubMenus();
+			this.closeAllDropdowns();
 		}
 	}
 
+	/**
+	 * Close dropdowns if the focus moves outside.
+	 */
 	private onFocusIn( event: FocusEvent ): void {
-		const target = event.target as Element;
-		if ( ! target ) return;
+		if (
+			event.target &&
+			event.target instanceof Element &&
+			event.target.closest( '.brave-nav-dropdown' )
+		)
+			return;
 
-		if ( target.closest( '.brave-nav-dropdown-on-hover' ) ) return;
-		if ( ! this.container.contains( target ) ) return;
-
-		this.closeAllSubMenus();
+		this.closeAllDropdowns();
 	}
 
+	/**
+	 * Initialize expandable menu items and add necessary aria attributes.
+	 */
 	private initExpandableMenuItems(): void {
-		this.expandableNavigationItems.forEach( ( item ) => {
-			const link =
-				item.querySelector< HTMLAnchorElement >( '.brave-nav-link' );
-
-			if ( ! link ) return;
-
+		this.expandableNavigationItems.forEach( ( link ) => {
 			this.setupAccessibility( link );
 
-			// Click handler always exists, also in hover mode
+			// Click toggle works in both modes
 			link.addEventListener( 'click', ( event ) =>
-				this.onClickToggle( event, item, link )
+				this.onClickToggle( event, link )
 			);
 
 			if ( this.mode === 'hover' ) {
-				item.addEventListener( 'mouseenter', () =>
-					this.openSubMenu( item, link )
+				// Hover events need to attach to <li> parent
+				const li = link.closest< HTMLElement >(
+					this.selectorNavigationItems
 				);
+				if ( ! li ) return;
 
-				item.addEventListener( 'mouseleave', () => {
-					// Only close if not persistently opened by click
-					if ( ! this.persistentItems.has( item ) ) {
-						this.closeSubMenu( item, link );
-					}
+				li.addEventListener( 'mouseenter', () =>
+					this.openDropdown( link )
+				);
+				li.addEventListener( 'mouseleave', () => {
+					if ( ! this.persistentItems.has( link ) )
+						this.closeDropdown( link );
 				} );
 			}
 		} );
@@ -133,62 +148,54 @@ export class BraveNavigation {
 		link.setAttribute( 'aria-expanded', 'false' );
 	}
 
-	private onClickToggle(
-		event: MouseEvent,
-		item: HTMLElement,
-		link: HTMLAnchorElement
-	): void {
+	private onClickToggle( event: MouseEvent, link: HTMLAnchorElement ): void {
 		const isOpen = link.getAttribute( 'aria-expanded' ) === 'true';
 
-		// CLICK MODE -> behaves like mobile menu
 		if ( this.mode === 'click' ) {
 			event.preventDefault();
 			event.stopPropagation();
 
 			if ( isOpen ) {
-				this.closeSubMenu( item, link );
+				this.closeDropdown( link );
 			} else {
-				this.closeAllSubMenus();
-				this.openSubMenu( item, link );
+				this.closeAllDropdowns();
+				this.openDropdown( link );
 			}
-
 			return;
 		}
 
-		// HOVER MODE -> click makes it persistent
+		// Hover mode: click makes it persistent
 		if ( this.mode === 'hover' ) {
 			event.stopPropagation();
 
 			if ( isOpen ) {
-				this.persistentItems.delete( item );
-				this.closeSubMenu( item, link );
+				this.persistentItems.delete( link );
+				this.closeDropdown( link );
 			} else {
-				this.persistentItems.add( item );
-				this.openSubMenu( item, link );
+				this.persistentItems.add( link );
+				this.openDropdown( link );
 			}
 		}
 	}
 
-	private openSubMenu( item: HTMLElement, link: HTMLAnchorElement ): void {
+	private openDropdown( link: HTMLAnchorElement ): void {
 		link.setAttribute( 'aria-expanded', 'true' );
-		item.classList.add( this.classOpenMenu );
+		link.classList.add( this.classOpenMenu );
 	}
 
-	private closeSubMenu( item: HTMLElement, link: HTMLAnchorElement ): void {
+	private closeDropdown( link: HTMLAnchorElement ): void {
 		link.setAttribute( 'aria-expanded', 'false' );
-		item.classList.remove( this.classOpenMenu );
+		link.classList.remove( this.classOpenMenu );
 	}
 
-	private closeAllSubMenus(): void {
+	/**
+	 * Close all dropdowns
+	 */
+	private closeAllDropdowns(): void {
 		this.persistentItems.clear();
 
-		this.expandableNavigationItems.forEach( ( item ) => {
-			const link =
-				item.querySelector< HTMLAnchorElement >( '.brave-nav-link' );
-
-			if ( link ) {
-				this.closeSubMenu( item, link );
-			}
-		} );
+		this.expandableNavigationItems.forEach( ( link ) =>
+			this.closeDropdown( link )
+		);
 	}
 }

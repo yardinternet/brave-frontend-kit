@@ -1,18 +1,18 @@
-import { BraveNavigation, BraveNavigationOptions } from './BraveNavigation';
+import { BraveNavigation } from './BraveNavigation';
 
 export class BraveNavigationManager {
-	private readonly options: BraveNavigationOptions;
+	private readonly BRAVE_NAV_SELECTOR = '.brave-nav';
 
-	constructor( options: BraveNavigationOptions = {} ) {
-		this.options = options;
+	constructor() {
 		this.init();
 	}
 
 	private init(): void {
-		const navigationInstances =
-			document.querySelectorAll< HTMLElement >( '.brave-nav' );
+		const navigationInstances = document.querySelectorAll< HTMLElement >(
+			this.BRAVE_NAV_SELECTOR
+		);
 		navigationInstances?.forEach(
-			( nav ) => new BraveNavigation( nav, this.options )
+			( navigation ) => new BraveNavigation( navigation )
 		);
 	}
 }

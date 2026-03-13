@@ -7,21 +7,25 @@ export class BraveNavigation {
 		'.brave-nav-link-has-children';
 
 	private readonly mode: DropdownMode;
+
 	private readonly activeDropdownToggleLinks: Set< HTMLAnchorElement > =
 		new Set();
 
 	private readonly container: HTMLElement;
-	private readonly dropdownToggleLinks: NodeListOf< HTMLAnchorElement >;
+
+	private readonly dropdownToggleLinks: HTMLAnchorElement[];
 
 	constructor( container: HTMLElement ) {
 		this.container = container;
 
-		this.dropdownToggleLinks =
-			this.container.querySelectorAll< HTMLAnchorElement >(
+		this.dropdownToggleLinks = [
+			...this.container.querySelectorAll< HTMLAnchorElement >(
 				this.BRAVE_NAV_LINK_HAS_CHILDREN_SELECTOR
-			);
+			),
+		];
 
 		this.mode = this.detectMode();
+
 		this.bindEvents();
 	}
 
@@ -38,85 +42,39 @@ export class BraveNavigation {
 	private bindEvents(): void {
 		if ( ! this.dropdownToggleLinks.length ) return;
 
-		document.addEventListener( 'keyup', this.onKeyUp.bind( this ) );
-		document.addEventListener( 'click', this.onClickDocument.bind( this ) );
-		document.addEventListener( 'focusin', this.onFocusIn.bind( this ) );
-
 		this.initExpandableMenuItems();
-	}
 
-	/**
-	 * A11y: Check if escape key is pressed, then close all dropdowns set focus to parent link
-	 */
-	private onKeyUp( event: KeyboardEvent ): void {
-		if ( event.key !== 'Escape' ) return;
+		// Event delegation for clicks
+		this.container.addEventListener( 'click', this.onContainerClick );
 
-		this.closeAllDropdowns();
-
-		let item: Element | null = null;
-		if ( event.target && event.target instanceof Element ) {
-			item = event.target.closest(
-				`${ this.BRAVE_NAV_ITEM_SELECTOR }:has(${ this.BRAVE_NAV_LINK_HAS_CHILDREN_SELECTOR })`
-			);
-		}
-		if ( ! item ) return;
-
-		const link = item.querySelector( 'a' );
-
-		link?.focus();
-	}
-
-	/**
-	 * Close dropdowns if clicked somewhere which is not inside the navigation container
-	 */
-	private onClickDocument( event: MouseEvent ): void {
-		const target = event.target as Node;
-		if ( ! this.container.contains( target ) ) {
-			this.closeAllDropdowns();
+		if ( this.mode === 'hover' ) {
+			this.initHoverEvents();
 		}
 	}
 
-	/**
-	 * Close dropdowns if the focus moves outside.
-	 */
-	private onFocusIn( event: FocusEvent ): void {
-		if (
-			event.target &&
-			event.target instanceof Element &&
-			event.target.closest( this.BRAVE_DROPDOWN_SELECTOR )
-		)
-			return;
-
-		this.closeAllDropdowns();
-	}
-
-	/**
-	 * Initialize expandable menu items and add necessary aria attributes.
-	 */
 	private initExpandableMenuItems(): void {
 		this.dropdownToggleLinks.forEach( ( link ) => {
 			this.setupAccessibility( link );
+		} );
+	}
 
-			// Click works in both modes
-			link.addEventListener( 'click', ( event ) =>
-				this.onClickToggle( event, link )
+	private initHoverEvents(): void {
+		this.dropdownToggleLinks.forEach( ( link ) => {
+			const li = link.closest< HTMLElement >(
+				this.BRAVE_NAV_ITEM_SELECTOR
 			);
 
-			if ( this.mode === 'hover' ) {
-				// Hover events need to attach to <li> parent
-				const li = link.closest< HTMLElement >(
-					this.BRAVE_NAV_ITEM_SELECTOR
-				);
-				if ( ! li ) return;
+			if ( ! li ) return;
 
-				li.addEventListener( 'mouseenter', () =>
-					this.openDropdown( link )
-				);
-				li.addEventListener( 'mouseleave', () => {
-					if ( ! this.activeDropdownToggleLinks.has( link ) )
-						this.closeDropdown( link );
-				} );
-			}
+			li.addEventListener( 'mouseenter', () =>
+				this.openDropdown( link )
+			);
+
+			li.addEventListener( 'mouseleave', () => {
+				if ( ! this.activeDropdownToggleLinks.has( link ) ) {
+					this.closeDropdown( link );
+				}
+			} );
 		} );
 	}
 
@@ -124,6 +82,21 @@ export class BraveNavigation {
 		link.setAttribute( 'aria-haspopup', 'true' );
 		link.setAttribute( 'aria-expanded', 'false' );
 	}
+
+	/**
+	 * Event delegation handler for click events inside the navigation
+	 */
+	private onContainerClick = ( event: MouseEvent ): void => {
+		const target = event.target as HTMLElement;
+
+		const link = target.closest(
+			this.BRAVE_NAV_LINK_HAS_CHILDREN_SELECTOR
+		) as HTMLAnchorElement | null;
+
+		if ( ! link || ! this.container.contains( link ) ) return;
+
+		this.onClickToggle( event, link );
+	};
 
 	private onClickToggle( event: MouseEvent, link: HTMLAnchorElement ): void {
 		const isOpen = link.getAttribute( 'aria-expanded' ) === 'true';
@@ -138,10 +111,10 @@ export class BraveNavigation {
 				this.closeAllDropdowns();
 				this.openDropdown( link );
 			}
+
 			return;
 		}
 
-		// Hover mode: click makes it persistent
 		if ( this.mode === 'hover' ) {
 			event.stopPropagation();
 
@@ -169,8 +142,63 @@ export class BraveNavigation {
 	private closeAllDropdowns(): void {
 		this.activeDropdownToggleLinks.clear();
 
-		this.dropdownToggleLinks.forEach( ( link ) =>
-			this.closeDropdown( link )
-		);
+		this.dropdownToggleLinks.forEach( ( link ) => {
+			this.closeDropdown( link );
+		} );
+	}
+
+	/**
+	 * A11y: Check if escape key is pressed, then close all dropdowns
+	 * and set focus to parent link
+	 */
+	public onKeyUp( event: KeyboardEvent ): void {
+		if ( event.key !== 'Escape' ) return;
+
+		this.closeAllDropdowns();
+
+		const target = event.target as HTMLElement | null;
+		if ( ! target ) return;
+
+		const dropdown = target.closest(
+			this.BRAVE_DROPDOWN_SELECTOR
+		) as HTMLElement | null;
+
+		if ( ! dropdown ) return;
+
+		const navItem = dropdown.closest( this.BRAVE_NAV_ITEM_SELECTOR );
+
+		if ( ! navItem ) return;
+
+		const toggle = navItem.querySelector(
+			this.BRAVE_NAV_LINK_HAS_CHILDREN_SELECTOR
+		) as HTMLAnchorElement | null;
+
+		toggle?.focus();
+	}
+
+	/**
+	 * Close dropdowns if clicked somewhere outside this navigation
+	 */
+	public onClickDocument( event: MouseEvent ): void {
+		const target = event.target as Node;
+
+		if ( ! this.container.contains( target ) ) {
+			this.closeAllDropdowns();
+		}
+	}
+
+	/**
+	 * Close dropdowns if focus moves outside dropdown
+	 */
+	public onFocusIn( event: FocusEvent ): void {
+		if (
+			event.target &&
+			event.target instanceof Element &&
+			event.target.closest( this.BRAVE_DROPDOWN_SELECTOR )
+		) {
+			return;
+		}
+
+		this.closeAllDropdowns();
 	}
 }

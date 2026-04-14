@@ -2,7 +2,7 @@ import { describe, it, beforeEach, expect, vi } from 'vitest';
 import { EnhancePDFLinks } from '@modules/EnhancePDFLinks';
 
 describe( 'EnhancePDFLinks', () => {
-	let iconHTML = '<i class="fa-regular fa-up-right-from-square mx-2"></i>';
+	const iconHTML = '<i class="fa-regular fa-up-right-from-square mx-2"></i>';
 	let xhrMock: any;
 
 	beforeEach( () => {

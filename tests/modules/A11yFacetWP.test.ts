@@ -1,14 +1,23 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { A11yFacetWP } from '@modules/A11yFacetWP.ts';
 
 describe( 'FacetWP', () => {
 	const templateViewId = 'js-brave-facetwp-template-view';
 
 	beforeEach( () => {
+		document.body.innerHTML = '';
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		( window as any ).FWP = undefined;
+		vi.spyOn( window, 'scrollTo' ).mockImplementation( () => {} );
+
 		const templateViewElement: HTMLDivElement =
 			document.createElement( 'div' );
 		templateViewElement.id = templateViewId;
 		document.body.appendChild( templateViewElement );
+	} );
+
+	afterEach( () => {
+		vi.restoreAllMocks();
 	} );
 
 	it( 'should have a default for the selectorPrefix option', () => {

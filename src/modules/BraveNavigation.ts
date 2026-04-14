@@ -188,16 +188,25 @@ export class BraveNavigation {
 	}
 
 	/**
-	 * Close dropdowns if focus moves outside dropdown
+	 * Close dropdowns when focus leaves the navigation.
+	 *
+	 * Click mode: closes only when focus leaves the container entirely, so
+	 * tapping between toggle buttons doesn't fight the click handler.
+	 * Hover mode: closes when focus leaves any open dropdown, so keyboard
+	 * users can Tab out to dismiss.
 	 */
 	public onFocusIn( event: FocusEvent ): void {
-		if (
-			event.target &&
-			event.target instanceof Element &&
-			event.target.closest( this.BRAVE_DROPDOWN_SELECTOR )
-		) {
+		const target = event.target;
+
+		if ( ! ( target instanceof Element ) ) return;
+
+		if ( this.mode === 'click' && this.container.contains( target ) )
 			return;
-		}
+		if (
+			this.mode === 'hover' &&
+			target.closest( this.BRAVE_DROPDOWN_SELECTOR )
+		)
+			return;
 
 		this.closeAllDropdowns();
 	}

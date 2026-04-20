@@ -26,7 +26,7 @@ const focusStyle = new FocusStyle();
 
 // Extended usage: all options
 const customFocusStyle = new FocusStyle( {
-	bodyClass: 'custom-class',
+    bodyClass: 'custom-class',
 } );
 ```
 
@@ -44,7 +44,7 @@ new DialogManager();
 
 // Extended usage: all options
 const dialogs = new DialogManager( {
-	selector: '.js-brave-dialog',
+    selector: '.js-brave-dialog',
 } );
 
 // To open, close or toggle a dialog with a specific ID
@@ -54,6 +54,71 @@ dialogs.toggle( 'js-brave-mobile-menu' );
 
 // To close all open dialogs
 dialogs.closeAll();
+```
+
+### `BraveTooltip`
+
+Controls one tooltip instance bound to one trigger element.
+
+#### Usage
+
+```javascript
+import { BraveTooltip } from '@yardinternet/brave-frontend-kit';
+
+const trigger = document.querySelector( '.js-brave-tooltip-trigger' );
+
+if ( trigger ) {
+    // Basic usage
+    new BraveTooltip( trigger );
+
+    // Extended usage: all options
+    new BraveTooltip( trigger, {
+        selectorArrow: '.js-brave-tooltip-arrow',
+        hideDelay: 150,
+        placement: 'top',
+        hiddenClass: 'hidden',
+    } );
+}
+```
+
+### `BraveTooltipManager`
+
+Manages multiple tooltip instances on a page and exposes methods to open, close, toggle and close all tooltips by tooltip id.
+
+#### Usage
+
+```javascript
+import { BraveTooltipManager } from '@yardinternet/brave-frontend-kit';
+
+// Basic usage
+new BraveTooltipManager();
+
+// Extended usage: all options
+const tooltips = new BraveTooltipManager( {
+    selectorTrigger: '.js-brave-tooltip-trigger',
+    selectorArrow: '.js-brave-tooltip-arrow',
+    hideDelay: 150,
+    placement: 'top',
+    hiddenClass: 'hidden',
+} );
+
+tooltips.open( 'tooltip-id' );
+tooltips.close( 'tooltip-id' );
+tooltips.toggle( 'tooltip-id' );
+tooltips.closeAll();
+```
+
+#### Required markup
+
+```html
+<button class='js-brave-tooltip-trigger' aria-describedby='tooltip-id'>
+    Tooltip trigger
+</button>
+
+<div id='tooltip-id' class='hidden' aria-hidden='true'>
+    <div class='js-brave-tooltip-arrow'></div>
+    Tooltip content
+</div>
 ```
 
 ### `EnhanceExternalLinks`
@@ -69,17 +134,17 @@ import { EnhanceExternalLinks } from '@yardinternet/brave-frontend-kit';
 
 // Basic usage
 new EnhanceExternalLinks( {
-	selector: '.main a',
-	icon: '<i class="js-enhance-external-link-icon fa-light fa-arrow-up-right-from-square"></i>',
+    selector: '.main a',
+    icon: '<i class="js-enhance-external-link-icon fa-light fa-arrow-up-right-from-square"></i>',
 } );
 
 // Extended usage: all options
 new EnhanceExternalLinks( {
-	selector: '.main a',
-	icon: '<i class="fa-regular fa-up-right-from-square mx-2"></i>',
-	excludedClasses: [ 'wp-block-button__link' ],
-	excludedUrlKeywords: [ 'openpdc' ],
-	insertIconBeforeText: true,
+    selector: '.main a',
+    icon: '<i class="fa-regular fa-up-right-from-square mx-2"></i>',
+    excludedClasses: [ 'wp-block-button__link' ],
+    excludedUrlKeywords: [ 'openpdc' ],
+    insertIconBeforeText: true,
 } );
 ```
 
@@ -95,28 +160,28 @@ Enhances `.pdf` links with a visual icon and optional file size fetched via a `H
 import { EnhancePDFLinks } from '@yardinternet/brave-frontend-kit';
 
 // Basic usage
-new EnhancePDFLinks( {a
-  selector: '.main a',
-  icon: '<i class="js-enhance-pdf-link-icon fa-light fa-file-pdf mx-2"></i>',
-  fileSizeClass: 'js-enhance-pdf-link-file-size text-xs',
+new EnhancePDFLinks( {
+    selector: '.main a',
+    icon: '<i class="js-enhance-pdf-link-icon fa-light fa-file-pdf mx-2"></i>',
+    fileSizeClass: 'js-enhance-pdf-link-file-size text-xs',
 } );
 
 // Extended usage: all options
 new EnhancePDFLinks( {
- selector: '.main a',
- icon: '<i class="fa-regular fa-file-pdf mx-2"></i>',
- excludedClasses: [ 'wp-block-button__link' ],
- excludedUrlKeywords: [ 'openpdc' ],
- insertIconBeforeText: true,
- showFileSize: false,
- fileSizeClass: 'js-enhance-pdf-link-file-size text-xs',
- insertIconBeforeText: true,
-  createFileSizeElement: ( bytes ) => {
-   const span = document.createElement( 'span' );
-   span.classList.add( 'text-xs' );
-   span.innerHTML = ` (pdf, ${ Math.round( bytes / 1024 ) } KB)`;
-   return span;
-  },
+    selector: '.main a',
+    icon: '<i class="fa-regular fa-file-pdf mx-2"></i>',
+    excludedClasses: [ 'wp-block-button__link' ],
+    excludedUrlKeywords: [ 'openpdc' ],
+    insertIconBeforeText: true,
+    showFileSize: false,
+    fileSizeClass: 'js-enhance-pdf-link-file-size text-xs',
+    insertIconBeforeText: true,
+    createFileSizeElement: ( bytes ) => {
+        const span = document.createElement( 'span' );
+        span.classList.add( 'text-xs' );
+        span.innerHTML = ` (pdf, ${ Math.round( bytes / 1024 ) } KB)`;
+        return span;
+    },
 } );
 ```
 
@@ -134,7 +199,7 @@ new WebShareApi();
 
 // Extended usage: all options
 new WebShareApi( {
-	selector: '.js-web-share-api',
+    selector: '.js-web-share-api',
 } );
 ```
 
@@ -152,8 +217,8 @@ new A11yFacetWP();
 
 // Extended usage: all options
 new A11yFacetWP( {
-	selectorPrefix: 'js',
-	scrollToTopOffset: 150,
+    selectorPrefix: 'js',
+    scrollToTopOffset: 150,
 } );
 ```
 

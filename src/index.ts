@@ -4,6 +4,8 @@ import { A11yFacetWP } from '@modules/A11yFacetWP';
 import { A11yMobileMenu } from '@modules/A11yMobileMenu';
 import { BraveNavigation } from '@modules/BraveNavigation';
 import { BraveNavigationManager } from '@modules/BraveNavigationManager';
+import { BraveTooltip } from '@modules/BraveTooltip';
+import { BraveTooltipManager } from '@modules/BraveTooltipManager';
 import { Dialog } from '@modules/Dialog';
 import { DialogManager } from '@modules/DialogManager';
 import { EnhanceExternalLinks } from '@modules/EnhanceExternalLinks';
@@ -23,6 +25,8 @@ export {
 	A11yMobileMenu,
 	BraveNavigation,
 	BraveNavigationManager,
+	BraveTooltip,
+	BraveTooltipManager,
 	Dialog,
 	DialogManager,
 	EnhanceExternalLinks,

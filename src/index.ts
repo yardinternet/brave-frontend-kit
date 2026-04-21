@@ -10,6 +10,7 @@ import { Dialog } from '@modules/Dialog';
 import { DialogManager } from '@modules/DialogManager';
 import { EnhanceExternalLinks } from '@modules/EnhanceExternalLinks';
 import { EnhancePDFLinks } from '@modules/EnhancePDFLinks';
+import { FacetWPDateRange } from '@modules/FacetWPDateRange';
 import { FocusStyle } from '@modules/FocusStyle';
 import { Navigation } from '@modules/Navigation';
 import { WebShareApi } from '@modules/WebShareApi';
@@ -31,6 +32,7 @@ export {
 	DialogManager,
 	EnhanceExternalLinks,
 	EnhancePDFLinks,
+	FacetWPDateRange,
 	FocusStyle,
 	Navigation,
 	WebShareApi,

@@ -3,7 +3,7 @@
  */
 import AccordionJS from 'accordion-js';
 
-export class Accordion {
+export class BraveAccordion {
 	private readonly WRAPPER_SELECTOR = '.accordion-wrapper';
 	private readonly ITEM_SELECTOR = '.ac';
 	private readonly PANEL_SELECTOR = '.ac-panel';

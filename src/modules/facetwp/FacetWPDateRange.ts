@@ -1,8 +1,3 @@
-/**
- * When a facetwp date range facet is used inside a <dialog> element, we need to change the place of the datepicker.
- * By default, the datepicker is placed at the end of the body element and that's not working when the date range facet is inside a <dialog> element.
- */
-
 interface FacetWPDateRangeOptions {
 	mobileBreakpoint?: number;
 }

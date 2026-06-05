@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { A11yFacetWP } from '@modules/A11yFacetWP.ts';
+import { A11yFacetWP } from '@modules/facetwp/A11yFacetWP';
 
-describe( 'FacetWP', () => {
+describe( 'A11yFacetWP', () => {
 	const templateViewId = 'js-brave-facetwp-template-view';
 
 	beforeEach( () => {

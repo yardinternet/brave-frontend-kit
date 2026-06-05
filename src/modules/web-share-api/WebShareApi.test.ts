@@ -1,5 +1,5 @@
 import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
-import { WebShareApi } from '@modules/WebShareApi';
+import { WebShareApi } from '@modules/web-share-api/WebShareApi';
 
 describe( 'WebShareApi', () => {
 	let originalShare: typeof navigator.share;

@@ -1,7 +1,7 @@
 import { describe, it, beforeEach, expect, vi } from 'vitest';
-import { Accordion } from '@modules/Accordion';
+import { BraveAccordion } from '@modules/brave-accordion/BraveAccordion';
 
-describe( 'Accordion', () => {
+describe( 'BraveAccordion', () => {
 	beforeEach( () => {
 		document.body.innerHTML = '';
 		vi.restoreAllMocks();
@@ -77,7 +77,7 @@ describe( 'Accordion', () => {
 
 	function testSingleAccordionOpenPanel(): void {
 		document.body.innerHTML = singleAccordionHtml;
-		new Accordion();
+		new BraveAccordion();
 
 		const accordionElem = document.querySelector(
 			'.accordion-wrapper'
@@ -100,7 +100,7 @@ describe( 'Accordion', () => {
 
 	function testMultipleAccordionsOpenPanels(): void {
 		document.body.innerHTML = multipleAccordionsHtml;
-		new Accordion();
+		new BraveAccordion();
 
 		const acc1 = document.getElementById( 'acc1' )!;
 		const acc2 = document.getElementById( 'acc2' )!;
@@ -126,15 +126,15 @@ describe( 'Accordion', () => {
 
 	function testNoAccordionsPresent(): void {
 		document.body.innerHTML = /*html*/ '';
-		// Check that Accordion does not throw an error if nothing is present
-		expect( () => new Accordion() ).not.toThrow();
+		// Check that BraveAccordion does not throw an error if nothing is present
+		expect( () => new BraveAccordion() ).not.toThrow();
 	}
 
 	async function testMultipleAllowed(): Promise< void > {
 		// This test checks that when data-multiple is true, you can open multiple panels at once
 		const expectedAnimationTime = 500;
 		document.body.innerHTML = multipleAllowedHtml;
-		new Accordion();
+		new BraveAccordion();
 		const accordionElem = document.querySelector(
 			'.accordion-wrapper'
 		) as HTMLElement;

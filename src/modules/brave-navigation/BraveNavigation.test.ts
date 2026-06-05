@@ -1,5 +1,5 @@
 import { describe, it, beforeEach, expect } from 'vitest';
-import { BraveNavigation } from '@modules/BraveNavigation';
+import { BraveNavigation } from '@modules/brave-navigation/BraveNavigation';
 
 // ─── HTML fixtures ────────────────────────────────────────────────────────────
 

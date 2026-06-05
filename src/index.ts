@@ -1,42 +1,50 @@
-import { Accordion } from '@modules/Accordion';
-import { A11yCards } from '@modules/A11yCards';
-import { A11yFacetWP } from '@modules/A11yFacetWP';
-import { A11yMobileMenu } from '@modules/A11yMobileMenu';
-import { BraveNavigation } from '@modules/BraveNavigation';
-import { BraveNavigationManager } from '@modules/BraveNavigationManager';
-import { BraveTooltip } from '@modules/BraveTooltip';
-import { BraveTooltipManager } from '@modules/BraveTooltipManager';
-import { Dialog } from '@modules/Dialog';
-import { DialogManager } from '@modules/DialogManager';
-import { EnhanceExternalLinks } from '@modules/EnhanceExternalLinks';
-import { EnhancePDFLinks } from '@modules/EnhancePDFLinks';
-import { FacetWPDateRange } from '@modules/FacetWPDateRange';
-import { FocusStyle } from '@modules/FocusStyle';
-import { Headroom } from '@modules/Headroom';
-import { Navigation } from '@modules/Navigation';
-import { WebShareApi } from '@modules/WebShareApi';
-import { findTabbable, findFirstTabbable, transformTag } from '@utils/a11y';
+import { A11yCards } from '@modules/a11y-cards/A11yCards';
+import { A11yFacetWP } from '@modules/facetwp/A11yFacetWP';
+import { FacetWPDateRange } from '@modules/facetwp/FacetWPDateRange';
+import { A11yMobileMenu } from '@modules/_deprecated/a11y-mobile-menu/A11yMobileMenu';
+import { BraveAccordion } from '@modules/brave-accordion/BraveAccordion';
+import { BraveDialog } from '@modules/brave-dialog/BraveDialog';
+import { BraveDialogManager } from '@modules/brave-dialog/BraveDialogManager';
+import { BraveNavigation } from '@modules/brave-navigation/BraveNavigation';
+import { BraveNavigationManager } from '@modules/brave-navigation/BraveNavigationManager';
+import { BraveTooltip } from '@modules/brave-tooltip/BraveTooltip';
+import { BraveTooltipManager } from '@modules/brave-tooltip/BraveTooltipManager';
+import { EnhanceExternalLinks } from '@modules/enhance-links/EnhanceExternalLinks';
+import { EnhancePDFLinks } from '@modules/enhance-links/EnhancePDFLinks';
+import { FocusStyle } from '@modules/focus-style/FocusStyle';
+import { Headroom } from '@modules/headroom/Headroom';
+import { Navigation } from '@modules/_deprecated/navigation/Navigation';
+import { WebShareApi } from '@modules/web-share-api/WebShareApi';
 import { checkCanFocusTrap } from '@utils/focus-trap';
+import { findTabbable, findFirstTabbable, transformTag } from '@utils/a11y';
 import { slugify } from '@utils/slugify';
+
+// Deprecated modules
+export { A11yMobileMenu, Navigation };
+
+// Old module names
+export {
+	BraveAccordion as Accordion,
+	BraveDialog as Dialog,
+	BraveDialogManager as DialogManager,
+};
 
 // Modules
 export {
-	Accordion,
 	A11yCards,
 	A11yFacetWP,
-	A11yMobileMenu,
+	BraveAccordion,
+	BraveDialog,
+	BraveDialogManager,
 	BraveNavigation,
 	BraveNavigationManager,
 	BraveTooltip,
 	BraveTooltipManager,
-	Dialog,
-	DialogManager,
 	EnhanceExternalLinks,
 	EnhancePDFLinks,
 	FacetWPDateRange,
 	FocusStyle,
 	Headroom,
-	Navigation,
 	WebShareApi,
 };
 

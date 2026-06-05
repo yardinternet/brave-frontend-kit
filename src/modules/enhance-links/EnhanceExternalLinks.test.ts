@@ -1,5 +1,5 @@
 import { describe, it, beforeEach, expect, vi } from 'vitest';
-import { EnhanceExternalLinks } from '@modules/EnhanceExternalLinks';
+import { EnhanceExternalLinks } from '@modules/enhance-links/EnhanceExternalLinks';
 
 type EnhanceExternalLinksPublic = EnhanceExternalLinks & {
 	shouldIgnore: ( link: HTMLAnchorElement, href: string ) => boolean;

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { BraveTooltipManager } from '@modules/BraveTooltipManager';
+import { BraveTooltipManager } from '@modules/brave-tooltip/BraveTooltipManager';
 
 const tooltipHtml = /*html*/ `
 	<button class='js-brave-tooltip-trigger' aria-describedby='tooltip-1'>

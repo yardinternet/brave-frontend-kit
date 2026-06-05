@@ -1,4 +1,4 @@
-import { EnhanceLinksBase } from '@modules/base/EnhanceLinksBase';
+import { EnhanceLinksBase } from './EnhanceLinksBase';
 
 export class EnhanceExternalLinks extends EnhanceLinksBase {
 	constructor( options = {} ) {

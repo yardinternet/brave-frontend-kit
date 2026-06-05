@@ -9,7 +9,7 @@ import { createFocusTrap, type Options, type FocusTrap } from 'focus-trap';
  */
 import { checkCanFocusTrap } from '@utils/focus-trap.ts';
 
-export class Dialog {
+export class BraveDialog {
 	private focusTrap: FocusTrap;
 	private useShow: boolean;
 

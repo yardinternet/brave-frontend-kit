@@ -1,5 +1,5 @@
 import { describe, it, beforeEach, expect, vi } from 'vitest';
-import { EnhancePDFLinks } from '@modules/EnhancePDFLinks';
+import { EnhancePDFLinks } from '@modules/enhance-links/EnhancePDFLinks';
 
 describe( 'EnhancePDFLinks', () => {
 	const iconHTML = '<i class="fa-regular fa-up-right-from-square mx-2"></i>';

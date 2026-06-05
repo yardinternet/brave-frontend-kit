@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { BraveTooltip } from '@modules/BraveTooltip';
+import { BraveTooltip } from '@modules/brave-tooltip/BraveTooltip';
 
 const { computePositionMock } = vi.hoisted( () => {
 	return {

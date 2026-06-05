@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { FocusStyle } from '@modules/FocusStyle';
+import { FocusStyle } from '@modules/focus-style/FocusStyle';
 
 describe( 'FocusStyle', () => {
 	let addEventListenerSpy: ReturnType< typeof vi.spyOn >;

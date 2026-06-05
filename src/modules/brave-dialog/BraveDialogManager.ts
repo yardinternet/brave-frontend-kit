@@ -1,17 +1,17 @@
 /**
  * Internal dependencies
  */
-import { Dialog } from './Dialog';
+import { BraveDialog } from './BraveDialog';
 
-interface DialogManagerOptions {
+interface BraveDialogManagerOptions {
 	selector?: string;
 }
 
-export class DialogManager {
+export class BraveDialogManager {
 	private readonly selector;
-	private dialogs = new Map< string, Dialog >();
+	private dialogs = new Map< string, BraveDialog >();
 
-	constructor( options: DialogManagerOptions = {} ) {
+	constructor( options: BraveDialogManagerOptions = {} ) {
 		this.selector = options.selector || '.js-brave-dialog';
 
 		const dialogElements = document.querySelectorAll< HTMLDialogElement >(
@@ -21,7 +21,7 @@ export class DialogManager {
 		dialogElements.forEach( ( dialog ) => {
 			if ( ! dialog.id ) return;
 
-			this.dialogs.set( dialog.id, new Dialog( dialog ) );
+			this.dialogs.set( dialog.id, new BraveDialog( dialog ) );
 		} );
 	}
 
@@ -29,7 +29,7 @@ export class DialogManager {
 		return this.dialogs.has( id );
 	}
 
-	get( id: string ): Dialog | undefined {
+	get( id: string ): BraveDialog | undefined {
 		return this.dialogs.get( id );
 	}
 

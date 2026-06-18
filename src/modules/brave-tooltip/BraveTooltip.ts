@@ -159,6 +159,7 @@ export class BraveTooltip {
 
 				const basePlacement = placement.split( '-' )[ 0 ] as Placement;
 				const staticSide = staticSideMap[ basePlacement ];
+				if ( ! staticSide ) return;
 
 				Object.assign( this.tooltipArrow!.style, {
 					left: arrowData.x !== null ? `${ arrowData.x }px` : '',

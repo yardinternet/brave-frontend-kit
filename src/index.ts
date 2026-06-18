@@ -16,7 +16,7 @@ import { FocusStyle } from '@modules/focus-style/FocusStyle';
 import { Headroom } from '@modules/headroom/Headroom';
 import { Navigation } from '@modules/_deprecated/navigation/Navigation';
 import { WebShareApi } from '@modules/web-share-api/WebShareApi';
-import { checkCanFocusTrap } from '@utils/focus-trap';
+import { checkCanFocusTrap } from '@utils/can-focus-trap.ts';
 import { findTabbable, findFirstTabbable, transformTag } from '@utils/a11y';
 import { slugify } from '@utils/slugify';
 

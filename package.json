@@ -29,6 +29,8 @@
 		"typecheck": "tsc --noEmit",
 		"lint:js": "yard-toolkit lint js -m custom './src/**/*.ts' && pnpm run typecheck",
 		"format:js": "yard-toolkit format js -m custom './src/**/*.ts'",
+		"format:check:js": "prettier --check './src/**/*.ts'",
+		"verify": "pnpm lint:js && pnpm format:check:js && pnpm test",
 		"test": "vitest",
 		"prepare": "husky"
 	},

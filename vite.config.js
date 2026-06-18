@@ -1,29 +1,21 @@
-import { defineConfig } from 'vite';
-import { resolve } from 'path';
+import { npmPackageConfig } from '@yardinternet/vite-config';
+import { resolve } from 'node:path';
 
-export default defineConfig( () => {
-	const isWatchMode = process.env.WATCH === 'true';
-
-	return {
-		resolve: {
-			alias: {
-				'@modules': resolve( __dirname, 'src/modules' ),
-				'@utils': resolve( __dirname, 'src/utils' ),
-			},
+export default npmPackageConfig( {
+	entryPoints: {
+		'brave-frontend-kit': 'src/index.ts',
+	},
+	plugins: [
+		{
+			name: 'brave-frontend-kit-aliases',
+			config: () => ( {
+				resolve: {
+					alias: {
+						'@modules': resolve( import.meta.dirname, 'src/modules' ),
+						'@utils': resolve( import.meta.dirname, 'src/utils' ),
+					},
+				},
+			} ),
 		},
-		build: {
-			lib: {
-				entry: resolve( __dirname, 'src/index.ts' ),
-				name: 'BraveFrontendTools',
-			},
-			watch: isWatchMode
-				? {
-						include: 'src/**',
-				  }
-				: null,
-		},
-		test: {
-			environment: 'jsdom',
-		},
-	};
+	],
 } );

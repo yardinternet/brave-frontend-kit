@@ -1,0 +1,7 @@
+publicHoistPattern:
+  - prettier
+  - eslint
+
+minimumReleaseAge: 10080
+minimumReleaseAgeExclude:
+  - '@yardinternet/*'

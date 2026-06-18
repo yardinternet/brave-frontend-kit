@@ -2,39 +2,49 @@
 	"name": "@yardinternet/brave-frontend-kit",
 	"version": "0.12.2",
 	"type": "module",
-	"main": "dist/brave-frontend-kit.umd.cjs",
+	"main": "dist/brave-frontend-kit.js",
 	"module": "dist/brave-frontend-kit.js",
+	"types": "dist/index.d.ts",
+	"exports": {
+		".": {
+			"import": "./dist/brave-frontend-kit.js"
+		}
+	},
 	"license": "EUPL-1.2",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/yardinternet/brave-frontend-kit.git"
 	},
 	"files": [
-		"dist"
+		"dist",
+		"src"
 	],
 	"publishConfig": {
 		"registry": "https://npm.pkg.github.com/@yardinternet"
 	},
 	"scripts": {
-		"start": "WATCH=true vite build",
+		"start": "vite build --watch",
 		"build": "vite build",
+		"prepack": "pnpm run typecheck && vite build",
+		"typecheck": "tsc --noEmit",
+		"lint:js": "yard-toolkit lint js -m custom './src/**/*.ts' && pnpm run typecheck",
+		"format:js": "yard-toolkit format js -m custom './src/**/*.ts'",
 		"test": "vitest",
-		"lint": "wp-scripts lint-js './src/**/*.ts'",
-		"format": "yard-toolkit format js -m custom './src/**/*.ts'",
 		"prepare": "husky"
 	},
 	"devDependencies": {
 		"@types/body-scroll-lock": "^3.1.2",
 		"@types/headroom.js": "^0.12.4",
-		"@wordpress/scripts": "^31.0.0",
-		"@yardinternet/prettier-config": "^1.0.2",
-		"@yardinternet/toolkit": "^1.0.3",
-		"eslint-import-resolver-typescript": "^4.4.4",
+		"@yardinternet/eslint-config": "^1.2.12",
+		"@yardinternet/prettier-config": "^2.0.11",
+		"@yardinternet/toolkit": "^2.1.11",
+		"@yardinternet/ts-config": "^1.1.2",
+		"@yardinternet/vite-config": "^1.3.4",
 		"husky": "^9.1.7",
 		"jsdom": "^26.1.0",
-		"typescript": "~5.7.2",
-		"vite": "^6.2.0",
-		"vitest": "^3.1.1"
+		"typescript": "^5.9.3",
+		"vite": "^7.3.5",
+		"vitest": "^3.2.4"
 	},
 	"dependencies": {
 		"@floating-ui/dom": "^1.7.6",
@@ -45,5 +55,6 @@
 	},
 	"optionalDependencies": {
 		"@rollup/rollup-linux-arm64-gnu": "*"
-	}
+	},
+	"packageManager": "pnpm@10.17.1+sha512.17c560fca4867ae9473a3899ad84a88334914f379be46d455cbf92e5cf4b39d34985d452d2583baf19967fa76cb5c17bc9e245529d0b98745721aa7200ecaf7a"
 }

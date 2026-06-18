@@ -142,7 +142,7 @@ describe( 'BraveAccordion', () => {
 
 		// Click the first trigger to open the first panel then wait for animation to finish
 		const triggers = accordionElem.querySelectorAll( '.ac-trigger' );
-		triggers[ 0 ].dispatchEvent(
+		triggers[ 0 ]!.dispatchEvent(
 			new window.MouseEvent( 'click', { bubbles: true } )
 		);
 		await new Promise( ( resolve ) =>
@@ -150,7 +150,7 @@ describe( 'BraveAccordion', () => {
 		);
 
 		// Click the second trigger to open the second panel
-		triggers[ 1 ].dispatchEvent(
+		triggers[ 1 ]!.dispatchEvent(
 			new window.MouseEvent( 'click', { bubbles: true } )
 		);
 		await new Promise( ( resolve ) =>

@@ -80,11 +80,13 @@ describe( 'BraveNavigationManager', () => {
 		document.body.innerHTML = multiNavHtml;
 		new BraveNavigationManager();
 
-		const [ link1, link2 ] = [
+		const links = [
 			...document.querySelectorAll< HTMLAnchorElement >(
 				'.brave-nav-link-has-children'
 			),
 		];
+		const link1 = links[ 0 ]!;
+		const link2 = links[ 1 ]!;
 
 		openDropdownByClick( link1 );
 		openDropdownByClick( link2 );
@@ -105,11 +107,13 @@ describe( 'BraveNavigationManager', () => {
 		document.body.innerHTML = multiNavHtml;
 		new BraveNavigationManager();
 
-		const [ link1, link2 ] = [
+		const links = [
 			...document.querySelectorAll< HTMLAnchorElement >(
 				'.brave-nav-link-has-children'
 			),
 		];
+		const link1 = links[ 0 ]!;
+		const link2 = links[ 1 ]!;
 
 		openDropdownByClick( link1 );
 		openDropdownByClick( link2 );
@@ -127,11 +131,12 @@ describe( 'BraveNavigationManager', () => {
 		document.body.innerHTML = multiNavHtml;
 		new BraveNavigationManager();
 
-		const [ link1 ] = [
+		const links = [
 			...document.querySelectorAll< HTMLAnchorElement >(
 				'.brave-nav-link-has-children'
 			),
 		];
+		const link1 = links[ 0 ]!;
 
 		openDropdownByClick( link1 );
 

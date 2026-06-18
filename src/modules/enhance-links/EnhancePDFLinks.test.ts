@@ -1,9 +1,18 @@
-import { describe, it, beforeEach, expect, vi } from 'vitest';
+import { describe, it, beforeEach, expect, vi, type Mock } from 'vitest';
 import { EnhancePDFLinks } from '@modules/enhance-links/EnhancePDFLinks';
+
+type XhrMock = {
+	open: Mock;
+	send: Mock;
+	readyState: number;
+	status: number;
+	getResponseHeader: Mock;
+	onreadystatechange: Mock;
+};
 
 describe( 'EnhancePDFLinks', () => {
 	const iconHTML = '<i class="fa-regular fa-up-right-from-square mx-2"></i>';
-	let xhrMock: any;
+	let xhrMock: XhrMock;
 
 	beforeEach( () => {
 		document.body.innerHTML = `
@@ -30,7 +39,7 @@ describe( 'EnhancePDFLinks', () => {
 	} );
 
 	it( 'adds icon and appends file size', async () => {
-		const instance = new EnhancePDFLinks( {
+		new EnhancePDFLinks( {
 			selector: 'a.pdf-link',
 			icon: iconHTML,
 			showFileSize: true,
@@ -55,7 +64,7 @@ describe( 'EnhancePDFLinks', () => {
 	} );
 
 	it( 'respects excludedClasses', () => {
-		const instance = new EnhancePDFLinks( {
+		new EnhancePDFLinks( {
 			selector: 'a',
 			icon: iconHTML,
 			excludedClasses: [ 'excluded' ],

@@ -81,6 +81,7 @@ describe( 'A11yFacetWP', () => {
 
 		window.FWP = {
 			loaded: true,
+			buildQueryString: () => '',
 		};
 
 		window.scrollY = 2;
@@ -96,14 +97,15 @@ describe( 'A11yFacetWP', () => {
 
 		window.FWP = {
 			loaded: true,
+			buildQueryString: () => '',
 		};
 
 		window.scrollY = 800;
 		const boxTop = 750;
 
-		vi.spyOn( window, 'scrollTo' ).mockImplementation(
-			( input ) => ( window.scrollY = input.top )
-		);
+		vi.spyOn( window, 'scrollTo' ).mockImplementation( ( ( options: ScrollToOptions ) => {
+			window.scrollY = options.top ?? 0;
+		} ) as typeof window.scrollTo );
 
 		facetWP.scrollToElementTop( boxTop );
 
@@ -119,6 +121,7 @@ describe( 'A11yFacetWP', () => {
 
 		window.FWP = {
 			loaded: true,
+			buildQueryString: () => '',
 		};
 
 		window.scrollY = 800;
@@ -126,9 +129,9 @@ describe( 'A11yFacetWP', () => {
 
 		const position = boxTop + window.scrollY - 150;
 
-		vi.spyOn( window, 'scrollTo' ).mockImplementation(
-			( input ) => ( window.scrollY = input.top )
-		);
+		vi.spyOn( window, 'scrollTo' ).mockImplementation( ( ( options: ScrollToOptions ) => {
+			window.scrollY = options.top ?? 0;
+		} ) as typeof window.scrollTo );
 
 		facetWP.scrollToElementTop( boxTop );
 

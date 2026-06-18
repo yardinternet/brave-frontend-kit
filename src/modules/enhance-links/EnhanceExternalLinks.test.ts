@@ -1,4 +1,4 @@
-import { describe, it, beforeEach, expect, vi } from 'vitest';
+import { describe, it, beforeEach, expect, vi, type Mock } from 'vitest';
 import { EnhanceExternalLinks } from '@modules/enhance-links/EnhanceExternalLinks';
 
 type EnhanceExternalLinksPublic = EnhanceExternalLinks & {
@@ -9,7 +9,7 @@ type EnhanceExternalLinksPublic = EnhanceExternalLinks & {
 
 describe( 'EnhanceExternalLinks', () => {
 	const iconHTML = '<i class="fa-regular fa-up-right-from-square mx-2"></i>';
-	let insertIconMock: vi.Mock;
+	let insertIconMock: Mock;
 
 	beforeEach( () => {
 		document.body.innerHTML = ''; // Clean slate for each test
@@ -17,7 +17,7 @@ describe( 'EnhanceExternalLinks', () => {
 		insertIconMock = vi.fn();
 
 		vi.spyOn(
-			EnhanceExternalLinks.prototype as any,
+			EnhanceExternalLinks.prototype as EnhanceExternalLinksPublic,
 			'insertIcon'
 		).mockImplementation( insertIconMock );
 	} );
@@ -67,7 +67,7 @@ describe( 'EnhanceExternalLinks', () => {
 				super( { ...options } );
 			}
 
-			protected init() {
+			protected override init() {
 				super.init(); // Allow init to run the logic
 			}
 		}
@@ -77,12 +77,11 @@ describe( 'EnhanceExternalLinks', () => {
 			icon: iconHTML,
 		} );
 
-		// @ts-ignore
-		const instanceWithTypedSpy = instance as EnhanceExternalLinksPublic;
+		const instanceWithTypedSpy = instance as unknown as EnhanceExternalLinksPublic;
 
 		const shouldIgnoreMock = vi
 			.spyOn( instanceWithTypedSpy, 'shouldIgnore' )
-			.mockImplementation( ( link, href ) =>
+			.mockImplementation( ( _link, href ) =>
 				href.includes( 'internal.com' )
 			);
 

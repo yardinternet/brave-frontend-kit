@@ -28,6 +28,8 @@ export class A11yCards {
 		if ( links.length === 0 || links.length > 1 ) return;
 
 		const link = links[ 0 ];
+		if ( ! link ) return;
+
 		if (
 			link.getAttribute( 'href' ) &&
 			link.classList.contains( 'wp-block-button__link' )

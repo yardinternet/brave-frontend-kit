@@ -1,6 +1,8 @@
 import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
 import { WebShareApi } from '@modules/web-share-api/WebShareApi';
 
+type NavigatorWithShare = { share?: typeof navigator.share };
+
 describe( 'WebShareApi', () => {
 	let originalShare: typeof navigator.share;
 
@@ -10,7 +12,7 @@ describe( 'WebShareApi', () => {
 	} );
 
 	afterEach( () => {
-		( navigator as any ).share = originalShare;
+		( navigator as NavigatorWithShare ).share = originalShare;
 		vi.restoreAllMocks();
 	} );
 
@@ -19,7 +21,7 @@ describe( 'WebShareApi', () => {
 			<button class="js-web-share-api" data-title="Share Title" data-text="Share Text" data-url="https://example.com">Share</button>
 		`;
 
-		( navigator as any ).share = undefined;
+		( navigator as NavigatorWithShare ).share = undefined;
 
 		new WebShareApi( { selector: '.js-web-share-api' } );
 
@@ -35,7 +37,7 @@ describe( 'WebShareApi', () => {
 		`;
 
 		const shareMock = vi.fn().mockResolvedValue( undefined );
-		( navigator as any ).share = shareMock;
+		( navigator as NavigatorWithShare ).share = shareMock;
 
 		new WebShareApi( { selector: '.js-web-share-api' } );
 

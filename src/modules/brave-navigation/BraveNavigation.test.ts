@@ -114,28 +114,28 @@ describe( 'BraveNavigation — click mode', () => {
 	it( 'opens a dropdown when its toggle link is clicked', () => {
 		const { links } = setup( clickModeHtml );
 
-		clickLink( links[ 0 ] );
+		clickLink( links[ 0 ]! );
 
-		expect( isExpanded( links[ 0 ] ) ).toBe( true );
+		expect( isExpanded( links[ 0 ]! ) ).toBe( true );
 	} );
 
 	it( 'closes an open dropdown when its toggle link is clicked again', () => {
 		const { links } = setup( clickModeHtml );
 
-		clickLink( links[ 0 ] );
-		clickLink( links[ 0 ] );
+		clickLink( links[ 0 ]! );
+		clickLink( links[ 0 ]! );
 
-		expect( isExpanded( links[ 0 ] ) ).toBe( false );
+		expect( isExpanded( links[ 0 ]! ) ).toBe( false );
 	} );
 
 	it( 'closes other open dropdowns when a new one is opened', () => {
 		const { links } = setup( clickModeHtml );
 
-		clickLink( links[ 0 ] );
-		clickLink( links[ 1 ] );
+		clickLink( links[ 0 ]! );
+		clickLink( links[ 1 ]! );
 
-		expect( isExpanded( links[ 0 ] ) ).toBe( false );
-		expect( isExpanded( links[ 1 ] ) ).toBe( true );
+		expect( isExpanded( links[ 0 ]! ) ).toBe( false );
+		expect( isExpanded( links[ 1 ]! ) ).toBe( true );
 	} );
 
 	it( 'prevents default navigation when clicking a toggle link', () => {
@@ -145,7 +145,7 @@ describe( 'BraveNavigation — click mode', () => {
 			bubbles: true,
 			cancelable: true,
 		} );
-		links[ 0 ].dispatchEvent( event );
+		links[ 0 ]!.dispatchEvent( event );
 
 		expect( event.defaultPrevented ).toBe( true );
 	} );
@@ -153,25 +153,25 @@ describe( 'BraveNavigation — click mode', () => {
 	it( 'closes all dropdowns on Escape key press', () => {
 		const { nav, links } = setup( clickModeHtml );
 
-		clickLink( links[ 0 ] );
+		clickLink( links[ 0 ]! );
 		nav.onKeyUp( new KeyboardEvent( 'keyup', { key: 'Escape' } ) );
 
-		expect( isExpanded( links[ 0 ] ) ).toBe( false );
+		expect( isExpanded( links[ 0 ]! ) ).toBe( false );
 	} );
 
 	it( 'does not close dropdowns on other key presses', () => {
 		const { nav, links } = setup( clickModeHtml );
 
-		clickLink( links[ 0 ] );
+		clickLink( links[ 0 ]! );
 		nav.onKeyUp( new KeyboardEvent( 'keyup', { key: 'Enter' } ) );
 
-		expect( isExpanded( links[ 0 ] ) ).toBe( true );
+		expect( isExpanded( links[ 0 ]! ) ).toBe( true );
 	} );
 
 	it( 'moves focus to the toggle link when Escape is pressed inside its dropdown', () => {
 		const { nav, container, links } = setup( clickModeHtml );
 
-		clickLink( links[ 0 ] );
+		clickLink( links[ 0 ]! );
 
 		const subLink = container.querySelector(
 			'.brave-nav-dropdown a'
@@ -193,13 +193,13 @@ describe( 'BraveNavigation — click mode', () => {
 		nav.onKeyUp( eventWithTarget );
 
 		// eslint-disable-next-line @wordpress/no-global-active-element
-		expect( document.activeElement ).toBe( links[ 0 ] );
+		expect( document.activeElement ).toBe( links[ 0 ]! );
 	} );
 
 	it( 'closes all dropdowns when clicking outside the navigation', () => {
 		const { nav, links } = setup( clickModeHtml );
 
-		clickLink( links[ 0 ] );
+		clickLink( links[ 0 ]! );
 
 		const outside = document.createElement( 'button' );
 		document.body.appendChild( outside );
@@ -210,13 +210,13 @@ describe( 'BraveNavigation — click mode', () => {
 		Object.defineProperty( event, 'target', { value: outside } );
 		nav.onClickDocument( event );
 
-		expect( isExpanded( links[ 0 ] ) ).toBe( false );
+		expect( isExpanded( links[ 0 ]! ) ).toBe( false );
 	} );
 
 	it( 'keeps dropdowns open when clicking inside the navigation', () => {
 		const { nav, container, links } = setup( clickModeHtml );
 
-		clickLink( links[ 0 ] );
+		clickLink( links[ 0 ]! );
 
 		// Click on an element that is inside the container
 		const insideElement = container.querySelector(
@@ -226,13 +226,13 @@ describe( 'BraveNavigation — click mode', () => {
 		Object.defineProperty( event, 'target', { value: insideElement } );
 		nav.onClickDocument( event );
 
-		expect( isExpanded( links[ 0 ] ) ).toBe( true );
+		expect( isExpanded( links[ 0 ]! ) ).toBe( true );
 	} );
 
 	it( 'closes all dropdowns when focus moves outside the container', () => {
 		const { nav, links } = setup( clickModeHtml );
 
-		clickLink( links[ 0 ] );
+		clickLink( links[ 0 ]! );
 
 		const outsideButton = document.createElement( 'button' );
 		document.body.appendChild( outsideButton );
@@ -241,13 +241,13 @@ describe( 'BraveNavigation — click mode', () => {
 		Object.defineProperty( event, 'target', { value: outsideButton } );
 		nav.onFocusIn( event );
 
-		expect( isExpanded( links[ 0 ] ) ).toBe( false );
+		expect( isExpanded( links[ 0 ]! ) ).toBe( false );
 	} );
 
 	it( 'keeps dropdowns open when focus remains within the container', () => {
 		const { nav, container, links } = setup( clickModeHtml );
 
-		clickLink( links[ 0 ] );
+		clickLink( links[ 0 ]! );
 
 		const insideElement = container.querySelector(
 			'.brave-nav-dropdown a'
@@ -256,7 +256,7 @@ describe( 'BraveNavigation — click mode', () => {
 		Object.defineProperty( event, 'target', { value: insideElement } );
 		nav.onFocusIn( event );
 
-		expect( isExpanded( links[ 0 ] ) ).toBe( true );
+		expect( isExpanded( links[ 0 ]! ) ).toBe( true );
 	} );
 } );
 
@@ -270,60 +270,60 @@ describe( 'BraveNavigation — hover mode', () => {
 	it( 'opens dropdown on mouseenter of the nav item', () => {
 		const { links } = setup( hoverModeHtml );
 
-		const navItem = links[ 0 ].closest( '.brave-nav-item' ) as HTMLElement;
+		const navItem = links[ 0 ]!.closest( '.brave-nav-item' ) as HTMLElement;
 		navItem.dispatchEvent( new MouseEvent( 'mouseenter' ) );
 
-		expect( isExpanded( links[ 0 ] ) ).toBe( true );
+		expect( isExpanded( links[ 0 ]! ) ).toBe( true );
 	} );
 
 	it( 'closes dropdown on mouseleave of the nav item when not pinned open', () => {
 		const { links } = setup( hoverModeHtml );
 
-		const navItem = links[ 0 ].closest( '.brave-nav-item' ) as HTMLElement;
+		const navItem = links[ 0 ]!.closest( '.brave-nav-item' ) as HTMLElement;
 		navItem.dispatchEvent( new MouseEvent( 'mouseenter' ) );
 		navItem.dispatchEvent( new MouseEvent( 'mouseleave' ) );
 
-		expect( isExpanded( links[ 0 ] ) ).toBe( false );
+		expect( isExpanded( links[ 0 ]! ) ).toBe( false );
 	} );
 
 	it( 'pins dropdown open on click and prevents mouseleave from closing it', () => {
 		const { links } = setup( hoverModeHtml );
 
-		const navItem = links[ 0 ].closest( '.brave-nav-item' ) as HTMLElement;
+		const navItem = links[ 0 ]!.closest( '.brave-nav-item' ) as HTMLElement;
 
 		// Click when closed → opens AND pins (adds to activeDropdownToggleLinks)
-		clickLink( links[ 0 ] );
+		clickLink( links[ 0 ]! );
 
 		// Mouseleave should NOT close the pinned dropdown
 		navItem.dispatchEvent( new MouseEvent( 'mouseleave' ) );
 
-		expect( isExpanded( links[ 0 ] ) ).toBe( true );
+		expect( isExpanded( links[ 0 ]! ) ).toBe( true );
 	} );
 
 	it( 'closes pinned dropdown when the toggle link is clicked again', () => {
 		const { links } = setup( hoverModeHtml );
 
-		clickLink( links[ 0 ] ); // click when closed → pin open
-		clickLink( links[ 0 ] ); // click when open → unpin + close
+		clickLink( links[ 0 ]! ); // click when closed → pin open
+		clickLink( links[ 0 ]! ); // click when open → unpin + close
 
-		expect( isExpanded( links[ 0 ] ) ).toBe( false );
+		expect( isExpanded( links[ 0 ]! ) ).toBe( false );
 	} );
 
 	it( 'closes all dropdowns on Escape key press', () => {
 		const { nav, links } = setup( hoverModeHtml );
 
-		const navItem = links[ 0 ].closest( '.brave-nav-item' ) as HTMLElement;
+		const navItem = links[ 0 ]!.closest( '.brave-nav-item' ) as HTMLElement;
 		navItem.dispatchEvent( new MouseEvent( 'mouseenter' ) );
 
 		nav.onKeyUp( new KeyboardEvent( 'keyup', { key: 'Escape' } ) );
 
-		expect( isExpanded( links[ 0 ] ) ).toBe( false );
+		expect( isExpanded( links[ 0 ]! ) ).toBe( false );
 	} );
 
 	it( 'keeps dropdown open when focus moves inside the dropdown', () => {
 		const { nav, container, links } = setup( hoverModeHtml );
 
-		const navItem = links[ 0 ].closest( '.brave-nav-item' ) as HTMLElement;
+		const navItem = links[ 0 ]!.closest( '.brave-nav-item' ) as HTMLElement;
 		navItem.dispatchEvent( new MouseEvent( 'mouseenter' ) );
 
 		const subLink = container.querySelectorAll(
@@ -333,20 +333,20 @@ describe( 'BraveNavigation — hover mode', () => {
 		Object.defineProperty( event, 'target', { value: subLink } );
 		nav.onFocusIn( event );
 
-		expect( isExpanded( links[ 0 ] ) ).toBe( true );
+		expect( isExpanded( links[ 0 ]! ) ).toBe( true );
 	} );
 
 	it( 'closes dropdown when focus moves to another toggle link (outside the dropdown)', () => {
 		const { nav, links } = setup( hoverModeHtml );
 
-		const navItem = links[ 0 ].closest( '.brave-nav-item' ) as HTMLElement;
+		const navItem = links[ 0 ]!.closest( '.brave-nav-item' ) as HTMLElement;
 		navItem.dispatchEvent( new MouseEvent( 'mouseenter' ) );
 
 		// Focus goes to the second toggle link (not inside a dropdown)
 		const event = new FocusEvent( 'focusin', { bubbles: true } );
-		Object.defineProperty( event, 'target', { value: links[ 1 ] } );
+		Object.defineProperty( event, 'target', { value: links[ 1 ]! } );
 		nav.onFocusIn( event );
 
-		expect( isExpanded( links[ 0 ] ) ).toBe( false );
+		expect( isExpanded( links[ 0 ]! ) ).toBe( false );
 	} );
 } );

@@ -77,7 +77,8 @@ describe( 'EnhanceExternalLinks', () => {
 			icon: iconHTML,
 		} );
 
-		const instanceWithTypedSpy = instance as unknown as EnhanceExternalLinksPublic;
+		const instanceWithTypedSpy =
+			instance as unknown as EnhanceExternalLinksPublic;
 
 		const shouldIgnoreMock = vi
 			.spyOn( instanceWithTypedSpy, 'shouldIgnore' )

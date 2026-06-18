@@ -103,7 +103,9 @@ describe( 'A11yFacetWP', () => {
 		window.scrollY = 800;
 		const boxTop = 750;
 
-		vi.spyOn( window, 'scrollTo' ).mockImplementation( ( ( options: ScrollToOptions ) => {
+		vi.spyOn( window, 'scrollTo' ).mockImplementation( ( (
+			options: ScrollToOptions
+		) => {
 			window.scrollY = options.top ?? 0;
 		} ) as typeof window.scrollTo );
 
@@ -129,7 +131,9 @@ describe( 'A11yFacetWP', () => {
 
 		const position = boxTop + window.scrollY - 150;
 
-		vi.spyOn( window, 'scrollTo' ).mockImplementation( ( ( options: ScrollToOptions ) => {
+		vi.spyOn( window, 'scrollTo' ).mockImplementation( ( (
+			options: ScrollToOptions
+		) => {
 			window.scrollY = options.top ?? 0;
 		} ) as typeof window.scrollTo );
 

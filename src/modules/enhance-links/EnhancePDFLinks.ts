@@ -1,4 +1,7 @@
-import { EnhanceLinksBase, type EnhanceLinksBaseOptions } from './EnhanceLinksBase';
+import {
+	EnhanceLinksBase,
+	type EnhanceLinksBaseOptions,
+} from './EnhanceLinksBase';
 import { formatFileSize } from '@utils/format-file-size';
 
 interface EnhancePDFLinksOptions extends EnhanceLinksBaseOptions {

@@ -24,7 +24,7 @@ export const findFirstTabbable = (
 ): HTMLElement | null => {
 	const tabbableElements = findTabbable( element );
 
-	return tabbableElements.length ? tabbableElements[ 0 ] : null;
+	return tabbableElements[ 0 ] ?? null;
 };
 
 /**
@@ -40,11 +40,8 @@ export const transformTag = (
 
 	transformedElement.innerHTML = element.innerHTML;
 
-	for ( let i = 0; i < element.attributes.length; i++ ) {
-		transformedElement.setAttribute(
-			element.attributes[ i ].name,
-			element.attributes[ i ].value
-		);
+	for ( const attribute of Array.from( element.attributes ) ) {
+		transformedElement.setAttribute( attribute.name, attribute.value );
 	}
 
 	if ( ! element.parentNode ) return transformedElement;

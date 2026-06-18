@@ -1,6 +1,6 @@
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import { createFocusTrap, type Options, type FocusTrap } from 'focus-trap';
-import { checkCanFocusTrap } from '@utils/focus-trap.ts';
+import { checkCanFocusTrap } from '@utils/can-focus-trap.ts';
 
 interface MobileAnimate {
 	keyframes?: Keyframe[] | PropertyIndexedKeyframes;

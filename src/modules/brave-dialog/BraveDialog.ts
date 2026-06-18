@@ -7,7 +7,7 @@ import { createFocusTrap, type Options, type FocusTrap } from 'focus-trap';
 /**
  * Internal dependencies
  */
-import { checkCanFocusTrap } from '@utils/focus-trap.ts';
+import { checkCanFocusTrap } from '@utils/can-focus-trap.ts';
 
 export class BraveDialog {
 	private focusTrap: FocusTrap;

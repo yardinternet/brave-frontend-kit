@@ -6,8 +6,8 @@ interface A11yFacetWPOptions {
 }
 
 export class A11yFacetWP {
-	public readonly selectorPrefix;
-	public readonly scrollToTopOffset;
+	public readonly selectorPrefix: string;
+	public readonly scrollToTopOffset: number;
 
 	constructor( options: A11yFacetWPOptions = {} ) {
 		this.selectorPrefix = options.selectorPrefix || 'js-brave';

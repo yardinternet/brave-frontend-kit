@@ -29,10 +29,13 @@ export class A11yFacetWP {
 		);
 
 		// Pager anchors get a real href (see enhancePagerLinks), so suppress the
-		// browser navigation and let FacetWP handle the click via AJAX.
+		// browser navigation and let FacetWP handle the click via AJAX. Guard the
+		// type first: e.target can be a non-element (e.g. text node) without closest().
 		document.addEventListener( 'click', ( e: MouseEvent ) => {
-			const target = e.target as HTMLElement | null;
-			if ( ! target?.closest( '.facetwp-page[href]' ) ) return;
+			const target = e.target;
+			if ( ! ( target instanceof Element ) ) return;
+			if ( ! target.closest( '.facetwp-page[href]' ) ) return;
+
 			e.preventDefault();
 		} );
 

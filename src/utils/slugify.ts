@@ -9,7 +9,7 @@ export const slugify = ( text: string | undefined ): string => {
 		.toLowerCase() // Convert the string to lowercase letters
 		.trim() // Remove whitespace from both sides of a string (optional)
 		.replace( /\s+/g, '-' )
-		.replace( /[^\w\-]+/g, '' )
-		.replace( /\-\-+/g, '-' )
-		.replace( /\-$/, '' );
+		.replace( /[^\w-]+/g, '' )
+		.replace( /--+/g, '-' )
+		.replace( /-$/, '' );
 };

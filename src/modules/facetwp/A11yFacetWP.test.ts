@@ -193,6 +193,23 @@ describe( 'A11yFacetWP', () => {
 			window.FWP_JSON = undefined;
 		} );
 
+		it( 'preserves the current URL hash in the generated href', () => {
+			vi.useFakeTimers();
+			window.location.hash = '#js-brave-facetwp-template-view';
+			new A11yFacetWP();
+			const link = addPagerLink( '2' );
+
+			dispatchLoaded();
+			vi.runAllTimers();
+
+			expect( link.getAttribute( 'href' ) ).toContain(
+				'_paged=2#js-brave-facetwp-template-view'
+			);
+
+			vi.useRealTimers();
+			window.location.hash = '';
+		} );
+
 		it( 'prevents default navigation when clicking an enhanced pager link', () => {
 			new A11yFacetWP();
 

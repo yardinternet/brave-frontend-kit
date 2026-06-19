@@ -151,7 +151,7 @@ export class A11yFacetWP {
 			url.searchParams.delete( param );
 		}
 
-		return `${ url.pathname }${ url.search }`;
+		return `${ url.pathname }${ url.search }${ url.hash }`;
 	}
 
 	/**

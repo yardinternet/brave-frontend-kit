@@ -1,4 +1,4 @@
-import { findFirstTabbable } from '@utils/a11y.ts';
+import { findFirstTabbable } from '@utils/a11y';
 
 interface A11yFacetWPOptions {
 	selectorPrefix?: string;

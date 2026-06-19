@@ -206,7 +206,7 @@ export class A11yTribeEvents {
 	// ========================= Scheduling (rAF debounce) ==========================
 	// ============================================================================
 	private scheduleInit(): void {
-		if ( this.initFrame ) {
+		if ( this.initFrame !== null ) {
 			cancelAnimationFrame( this.initFrame );
 		}
 
@@ -223,7 +223,7 @@ export class A11yTribeEvents {
 		if ( ! wrapper || ! container ) return;
 
 		const pendingFrame = this.rafByWrapper.get( wrapper );
-		if ( pendingFrame ) {
+		if ( pendingFrame !== undefined ) {
 			cancelAnimationFrame( pendingFrame );
 		}
 

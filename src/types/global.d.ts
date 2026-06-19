@@ -14,6 +14,16 @@ declare global {
 		};
 
 		/**
+		 * FacetWP exposes FWP_JSON for front-end data such as the query-var
+		 * prefix used in pagination URLs.
+		 *
+		 * @see https://facetwp.com/help-center/developers/javascript-reference/js-objects-and-functions/
+		 */
+		FWP_JSON?: {
+			prefix?: string;
+		};
+
+		/**
 		 * jQuery is provided by WordPress / The Events Calendar. Typed minimally —
 		 * only the `jQuery( document ).on( event, handler )` call this kit uses.
 		 */

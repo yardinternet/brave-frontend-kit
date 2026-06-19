@@ -134,4 +134,80 @@ describe( 'A11yFacetWP', () => {
 
 		expect( window.scrollY ).toBe( position );
 	} );
+
+	describe( 'pager links', () => {
+		const addPagerLink = ( page: string ): HTMLAnchorElement => {
+			const link = document.createElement( 'a' );
+			link.className = 'facetwp-page';
+			link.setAttribute( 'data-page', page );
+			link.setAttribute( 'role', 'link' );
+			link.setAttribute( 'tabindex', '0' );
+			document.body.appendChild( link );
+			return link;
+		};
+
+		const dispatchLoaded = (): void => {
+			document.dispatchEvent( new CustomEvent( 'facetwp-loaded' ) );
+		};
+
+		it( 'gives pager anchors a real href and drops redundant a11y attributes', () => {
+			vi.useFakeTimers();
+			new A11yFacetWP();
+			const link = addPagerLink( '2' );
+
+			dispatchLoaded();
+			vi.runAllTimers();
+
+			expect( link.getAttribute( 'href' ) ).toContain( '_paged=2' );
+			expect( link.hasAttribute( 'role' ) ).toBe( false );
+			expect( link.hasAttribute( 'tabindex' ) ).toBe( false );
+
+			vi.useRealTimers();
+		} );
+
+		it( 'omits the paged param for page 1', () => {
+			vi.useFakeTimers();
+			new A11yFacetWP();
+			const link = addPagerLink( '1' );
+
+			dispatchLoaded();
+			vi.runAllTimers();
+
+			expect( link.getAttribute( 'href' ) ).not.toContain( 'paged' );
+
+			vi.useRealTimers();
+		} );
+
+		it( 'uses the FWP_JSON prefix for the paged param', () => {
+			vi.useFakeTimers();
+			window.FWP_JSON = { prefix: 'fwp_' };
+			new A11yFacetWP();
+			const link = addPagerLink( '3' );
+
+			dispatchLoaded();
+			vi.runAllTimers();
+
+			expect( link.getAttribute( 'href' ) ).toContain( 'fwp_paged=3' );
+
+			vi.useRealTimers();
+			window.FWP_JSON = undefined;
+		} );
+
+		it( 'prevents default navigation when clicking an enhanced pager link', () => {
+			new A11yFacetWP();
+
+			const link = document.createElement( 'a' );
+			link.className = 'facetwp-page';
+			link.setAttribute( 'href', '/?_paged=2' );
+			document.body.appendChild( link );
+
+			const event = new MouseEvent( 'click', {
+				bubbles: true,
+				cancelable: true,
+			} );
+			link.dispatchEvent( event );
+
+			expect( event.defaultPrevented ).toBe( true );
+		} );
+	} );
 } );

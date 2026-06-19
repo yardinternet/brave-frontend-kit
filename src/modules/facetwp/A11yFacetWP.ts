@@ -28,6 +28,14 @@ export class A11yFacetWP {
 			this.onFacetLoad( e )
 		);
 
+		// Pager anchors get a real href (see enhancePagerLinks), so suppress the
+		// browser navigation and let FacetWP handle the click via AJAX.
+		document.addEventListener( 'click', ( e: MouseEvent ) => {
+			const target = e.target as HTMLElement | null;
+			if ( ! target?.closest( '.facetwp-page[href]' ) ) return;
+			e.preventDefault();
+		} );
+
 		// Catch up if facets already loaded, needed for Vite
 		if ( window.FWP && window.FWP.loaded ) {
 			this.onFacetLoad();
@@ -61,6 +69,7 @@ export class A11yFacetWP {
 		 */
 		setTimeout( () => {
 			this.removeRoleNavigationFromPager();
+			this.enhancePagerLinks();
 			this.addAriaCurrentToPager();
 			this.changeAriaLabelSelections();
 		}, 1 );
@@ -108,6 +117,41 @@ export class A11yFacetWP {
 		if ( pager.parentElement?.tagName.toLowerCase() === 'nav' ) {
 			pager.removeAttribute( 'role' );
 		}
+	}
+
+	/**
+	 * A11y: give pager anchors a real href so role="link"/tabindex become redundant.
+	 */
+	private enhancePagerLinks(): void {
+		const links = document.querySelectorAll< HTMLAnchorElement >(
+			'.facetwp-page[data-page]'
+		);
+
+		links.forEach( ( link ) => {
+			const page = link.getAttribute( 'data-page' );
+			if ( ! page ) return;
+
+			link.setAttribute( 'href', this.buildPagerHref( page ) );
+			link.removeAttribute( 'role' );
+			link.removeAttribute( 'tabindex' );
+		} );
+	}
+
+	/**
+	 * Build a pagination URL for the given page, preserving facet selections.
+	 */
+	private buildPagerHref( page: string ): string {
+		const prefix = window.FWP_JSON?.prefix ?? '_';
+		const param = `${ prefix }paged`;
+		const url = new URL( window.location.href );
+
+		if ( Number( page ) > 1 ) {
+			url.searchParams.set( param, page );
+		} else {
+			url.searchParams.delete( param );
+		}
+
+		return `${ url.pathname }${ url.search }`;
 	}
 
 	/**

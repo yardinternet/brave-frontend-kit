@@ -1,6 +1,7 @@
 import { A11yCards } from '@modules/a11y-cards/A11yCards';
 import { A11yFacetWP } from '@modules/facetwp/A11yFacetWP';
 import { FacetWPDateRange } from '@modules/facetwp/FacetWPDateRange';
+import { A11yTribeEvents } from '@modules/tribe-events/A11yTribeEvents';
 import { A11yMobileMenu } from '@modules/_deprecated/a11y-mobile-menu/A11yMobileMenu';
 import { BraveAccordion } from '@modules/brave-accordion/BraveAccordion';
 import { BraveDialog } from '@modules/brave-dialog/BraveDialog';
@@ -33,6 +34,7 @@ export {
 export {
 	A11yCards,
 	A11yFacetWP,
+	A11yTribeEvents,
 	BraveAccordion,
 	BraveDialog,
 	BraveDialogManager,

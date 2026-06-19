@@ -12,5 +12,13 @@ declare global {
 			loaded: boolean;
 			buildQueryString: () => string;
 		};
+
+		/**
+		 * jQuery is provided by WordPress / The Events Calendar. Typed minimally —
+		 * only the `jQuery( document ).on( event, handler )` call this kit uses.
+		 */
+		jQuery?: ( target: Document ) => {
+			on( event: string, handler: () => void ): unknown;
+		};
 	}
 }

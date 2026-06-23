@@ -19,6 +19,7 @@ interface BraveTooltipOptions {
 }
 
 const DEFAULT_ARROW_SELECTOR = '.js-brave-tooltip-arrow';
+
 const DEFAULT_HIDDEN_CLASS = 'hidden';
 
 export class BraveTooltip {

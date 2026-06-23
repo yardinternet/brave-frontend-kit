@@ -7,12 +7,14 @@ interface BraveDialogManagerOptions {
 	selector?: string;
 }
 
+const DEFAULT_SELECTOR = '.js-brave-dialog';
+
 export class BraveDialogManager {
 	private readonly selector;
 	private dialogs = new Map< string, BraveDialog >();
 
 	constructor( options: BraveDialogManagerOptions = {} ) {
-		this.selector = options.selector || '.js-brave-dialog';
+		this.selector = options.selector || DEFAULT_SELECTOR;
 
 		const dialogElements = document.querySelectorAll< HTMLDialogElement >(
 			this.selector

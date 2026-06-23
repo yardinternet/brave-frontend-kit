@@ -18,6 +18,9 @@ interface BraveTooltipOptions {
 	hiddenClass?: string;
 }
 
+const DEFAULT_ARROW_SELECTOR = '.js-brave-tooltip-arrow';
+const DEFAULT_HIDDEN_CLASS = 'hidden';
+
 export class BraveTooltip {
 	private readonly trigger: HTMLElement;
 	private readonly tooltip: HTMLElement | null;
@@ -30,9 +33,9 @@ export class BraveTooltip {
 
 	constructor( trigger: HTMLElement, options: BraveTooltipOptions = {} ) {
 		this.trigger = trigger;
-		this.selectorArrow = options.selectorArrow ?? '.js-brave-tooltip-arrow';
+		this.selectorArrow = options.selectorArrow ?? DEFAULT_ARROW_SELECTOR;
 		this.hideDelay = options.hideDelay ?? 150;
-		this.hiddenClass = options.hiddenClass ?? 'hidden';
+		this.hiddenClass = options.hiddenClass ?? DEFAULT_HIDDEN_CLASS;
 		this.placement = options.placement ?? 'top';
 		this.tooltip = null;
 		this.tooltipArrow = null;

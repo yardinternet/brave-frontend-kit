@@ -5,6 +5,8 @@ interface HeadroomOptions {
 	selectorHeader?: string;
 }
 
+const DEFAULT_HEADER_SELECTOR = '#js-brave-header';
+
 export class Headroom {
 	private readonly header;
 	private readonly headroomOptions;
@@ -17,7 +19,7 @@ export class Headroom {
 				down: 30,
 			},
 		};
-		this.selectorHeader = options.selectorHeader || '#js-brave-header';
+		this.selectorHeader = options.selectorHeader || DEFAULT_HEADER_SELECTOR;
 
 		this.header = document.querySelector< HTMLElement >(
 			this.selectorHeader

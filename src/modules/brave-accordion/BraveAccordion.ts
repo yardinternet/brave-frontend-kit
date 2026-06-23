@@ -3,13 +3,18 @@
  */
 import AccordionJS from 'accordion-js';
 
-export class BraveAccordion {
-	private readonly WRAPPER_SELECTOR = '.accordion-wrapper';
-	private readonly ITEM_SELECTOR = '.ac';
-	private readonly PANEL_SELECTOR = '.ac-panel';
-	private readonly DEFAULT_OPEN_CLASS = 'is-open';
-	private readonly HIDDEN_CLASS = 'hidden';
+const SELECTORS = {
+	wrapper: '.accordion-wrapper',
+	item: '.ac',
+	panel: '.ac-panel',
+} as const;
 
+const CLASSES = {
+	defaultOpen: 'is-open',
+	hidden: 'hidden',
+} as const;
+
+export class BraveAccordion {
 	constructor() {
 		const accordions = this.getAccordionWrappers();
 		if ( accordions.length === 0 ) return;
@@ -44,13 +49,13 @@ export class BraveAccordion {
 			duration: 400,
 			beforeOpen: ( item: HTMLElement ): void => {
 				item
-					.querySelector( this.PANEL_SELECTOR )
-					?.classList.remove( this.HIDDEN_CLASS );
+					.querySelector( SELECTORS.panel )
+					?.classList.remove( CLASSES.hidden );
 			},
 			onClose: ( item: HTMLElement ): void => {
 				item
-					.querySelector( this.PANEL_SELECTOR )
-					?.classList.add( this.HIDDEN_CLASS );
+					.querySelector( SELECTORS.panel )
+					?.classList.add( CLASSES.hidden );
 			},
 		};
 
@@ -59,21 +64,21 @@ export class BraveAccordion {
 
 	private getAccordionWrappers(): HTMLDivElement[] {
 		const accordions = document.querySelectorAll< HTMLDivElement >(
-			this.WRAPPER_SELECTOR
+			SELECTORS.wrapper
 		);
 		return Array.from( accordions );
 	}
 
 	private getAccordionItems( accordion: HTMLElement ): HTMLElement[] {
 		const items = accordion.querySelectorAll< HTMLElement >(
-			this.ITEM_SELECTOR
+			SELECTORS.item
 		);
 		return Array.from( items );
 	}
 
 	private getDefaultOpenItemIndexes( items: HTMLElement[] ): number[] {
 		return items.flatMap( ( item, index ) =>
-			item.classList.contains( this.DEFAULT_OPEN_CLASS ) ? [ index ] : []
+			item.classList.contains( CLASSES.defaultOpen ) ? [ index ] : []
 		);
 	}
 }

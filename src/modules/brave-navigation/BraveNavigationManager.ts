@@ -1,8 +1,8 @@
 import { BraveNavigation } from './BraveNavigation';
 
-export class BraveNavigationManager {
-	private readonly BRAVE_NAV_SELECTOR = '.brave-nav';
+const NAV_SELECTOR = '.brave-nav';
 
+export class BraveNavigationManager {
 	private navigations: BraveNavigation[] = [];
 
 	constructor() {
@@ -11,9 +11,8 @@ export class BraveNavigationManager {
 	}
 
 	private init(): void {
-		const navigationContainers = document.querySelectorAll< HTMLElement >(
-			this.BRAVE_NAV_SELECTOR
-		);
+		const navigationContainers =
+			document.querySelectorAll< HTMLElement >( NAV_SELECTOR );
 
 		navigationContainers.forEach( ( container ) => {
 			this.navigations.push( new BraveNavigation( container ) );

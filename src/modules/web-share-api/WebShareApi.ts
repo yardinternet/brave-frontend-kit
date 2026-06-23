@@ -2,11 +2,13 @@ interface WebShareApiOptions {
 	selector?: string;
 }
 
+const DEFAULT_SELECTOR = '.js-web-share-api';
+
 export class WebShareApi {
 	private readonly selector;
 
 	constructor( options: WebShareApiOptions = {} ) {
-		this.selector = options.selector || '.js-web-share-api';
+		this.selector = options.selector || DEFAULT_SELECTOR;
 		this.init();
 	}
 

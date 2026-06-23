@@ -2,12 +2,14 @@ interface FocusStyleOptions {
 	bodyClass?: string;
 }
 
+const DEFAULT_BODY_CLASS = 'js-user-is-tabbing';
+
 export class FocusStyle {
 	private readonly bodyClass;
 	private isUsingKeyboard: boolean;
 
 	constructor( options: FocusStyleOptions = {} ) {
-		this.bodyClass = options.bodyClass || 'js-user-is-tabbing';
+		this.bodyClass = options.bodyClass || DEFAULT_BODY_CLASS;
 		this.isUsingKeyboard = false;
 		this.init();
 	}

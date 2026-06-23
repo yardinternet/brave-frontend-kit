@@ -1,5 +1,7 @@
 import { EnhanceLinksBase } from './EnhanceLinksBase';
 
+const SR_ONLY_CLASS = 'sr-only';
+
 export class EnhanceExternalLinks extends EnhanceLinksBase {
 	constructor( options = {} ) {
 		super( options );
@@ -31,7 +33,7 @@ export class EnhanceExternalLinks extends EnhanceLinksBase {
 
 	private insertSrOnlyText( link: HTMLAnchorElement, text: string ): void {
 		const srOnlyText = document.createElement( 'span' );
-		srOnlyText.classList.add( 'sr-only' );
+		srOnlyText.classList.add( SR_ONLY_CLASS );
 		srOnlyText.textContent = text;
 		if ( this.insertIconBeforeText ) {
 			link.prepend( srOnlyText );

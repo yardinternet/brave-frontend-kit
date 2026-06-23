@@ -5,6 +5,26 @@ interface A11yFacetWPOptions {
 	scrollToTopOffset?: number; // Adjust this number to alter final scroll to top position
 }
 
+const SELECTORS = {
+	search: '.facetwp-search',
+	pager: '.facetwp-pager',
+	page: '.facetwp-page',
+	pageWithHref: '.facetwp-page[href]',
+	pageWithData: '.facetwp-page[data-page]',
+	pageActive: '.facetwp-page.active',
+	selectionValue: '.facetwp-selection-value',
+	toggle: '.facetwp-toggle:not(.facetwp-hidden)',
+	fieldset: 'fieldset',
+	legend: 'legend',
+} as const;
+
+const CLASSES = {
+	loading: 'loading',
+	hidden: 'hidden',
+} as const;
+
+const TEMPLATE_VIEW_ID_SUFFIX = '-facetwp-template-view';
+
 export class A11yFacetWP {
 	public readonly selectorPrefix: string;
 	public readonly scrollToTopOffset: number;
@@ -34,7 +54,7 @@ export class A11yFacetWP {
 		document.addEventListener( 'click', ( e: MouseEvent ) => {
 			const target = e.target;
 			if ( ! ( target instanceof Element ) ) return;
-			if ( ! target.closest( '.facetwp-page[href]' ) ) return;
+			if ( ! target.closest( SELECTORS.pageWithHref ) ) return;
 
 			e.preventDefault();
 		} );
@@ -47,18 +67,18 @@ export class A11yFacetWP {
 
 	private onFacetRefresh(): void {
 		const view = document.getElementById(
-			this.selectorPrefix + '-facetwp-template-view'
+			this.selectorPrefix + TEMPLATE_VIEW_ID_SUFFIX
 		);
 		if ( ! view ) return;
-		view.classList.add( 'loading' );
+		view.classList.add( CLASSES.loading );
 	}
 
 	private onFacetLoad( e?: Event ): void {
 		const view = document.getElementById(
-			this.selectorPrefix + '-facetwp-template-view'
+			this.selectorPrefix + TEMPLATE_VIEW_ID_SUFFIX
 		);
 		if ( ! view ) return;
-		view.classList.remove( 'loading' );
+		view.classList.remove( CLASSES.loading );
 
 		if ( e ) e.preventDefault();
 		this.scrollToElementTop( view.getBoundingClientRect().top );
@@ -96,7 +116,7 @@ export class A11yFacetWP {
 	 */
 	private addAriaLabelToSearch(): void {
 		const searchInput = document.querySelector(
-			'.facetwp-search'
+			SELECTORS.search
 		) as HTMLInputElement | null;
 		if ( ! searchInput ) return;
 
@@ -114,7 +134,7 @@ export class A11yFacetWP {
 	 * A11y: remove 'role=navigation' from FacetWP pager if it is inside a <nav> element.
 	 */
 	private removeRoleNavigationFromPager(): void {
-		const pager = document.querySelector( '.facetwp-pager' );
+		const pager = document.querySelector( SELECTORS.pager );
 		if ( ! pager ) return;
 
 		if ( pager.parentElement?.tagName.toLowerCase() === 'nav' ) {
@@ -127,7 +147,7 @@ export class A11yFacetWP {
 	 */
 	private enhancePagerLinks(): void {
 		const links = document.querySelectorAll< HTMLAnchorElement >(
-			'.facetwp-page[data-page]'
+			SELECTORS.pageWithData
 		);
 
 		links.forEach( ( link ) => {
@@ -161,7 +181,7 @@ export class A11yFacetWP {
 	 * A11y: add 'aria-current' attribute to FacetWP pager.
 	 */
 	private addAriaCurrentToPager(): void {
-		const activePage = document.querySelector( '.facetwp-page.active' );
+		const activePage = document.querySelector( SELECTORS.pageActive );
 		if ( ! activePage ) return;
 		activePage.setAttribute( 'aria-current', 'page' );
 	}
@@ -171,7 +191,7 @@ export class A11yFacetWP {
 	 */
 	private changeAriaLabelSelections(): void {
 		const selections = document.querySelectorAll(
-			'.facetwp-selection-value'
+			SELECTORS.selectionValue
 		);
 		if ( selections.length === 0 ) return;
 
@@ -188,8 +208,9 @@ export class A11yFacetWP {
 	 * A11y: change tab focus when using pager
 	 */
 	private changeTabFocusPager(): void {
-		const pagerButtons =
-			document.querySelectorAll< HTMLAnchorElement >( '.facetwp-page' );
+		const pagerButtons = document.querySelectorAll< HTMLAnchorElement >(
+			SELECTORS.page
+		);
 		if ( pagerButtons.length === 0 ) return;
 
 		pagerButtons.forEach( ( pager ) => {
@@ -204,7 +225,7 @@ export class A11yFacetWP {
 	private changeTabFocusToTemplate(): void {
 		setTimeout( () => {
 			const template = document.getElementById(
-				this.selectorPrefix + '-facetwp-template-view'
+				this.selectorPrefix + TEMPLATE_VIEW_ID_SUFFIX
 			);
 			if ( ! template ) return;
 
@@ -237,7 +258,10 @@ export class A11yFacetWP {
 			! /^_paged=\d+$|s=[^&]*&_paged=\d+$|s=[^&]*$/.test( queryString );
 
 		filterElements.forEach( ( filterElement ) => {
-			filterElement.classList.toggle( 'hidden', ! shouldShowElement );
+			filterElement.classList.toggle(
+				CLASSES.hidden,
+				! shouldShowElement
+			);
 		} );
 	}
 
@@ -245,16 +269,14 @@ export class A11yFacetWP {
 	 * Append filter group name to "Toon X meer" toggle links
 	 */
 	private updateShowMoreLabels(): void {
-		const toggles = document.querySelectorAll(
-			'.facetwp-toggle:not(.facetwp-hidden)'
-		);
+		const toggles = document.querySelectorAll( SELECTORS.toggle );
 		toggles.forEach( ( toggle ) => {
 			const match = toggle.textContent.match( /^Toon (\d+) meer$/i );
 
 			if ( match ) {
 				const legend = toggle
-					.closest( 'fieldset' )
-					?.querySelector( 'legend' );
+					.closest( SELECTORS.fieldset )
+					?.querySelector( SELECTORS.legend );
 
 				if ( ! legend ) {
 					return;

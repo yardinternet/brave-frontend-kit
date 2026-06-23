@@ -10,6 +10,8 @@ interface EnhancePDFLinksOptions extends EnhanceLinksBaseOptions {
 	createFileSizeElement?: ( sizeInBytes: number ) => HTMLElement;
 }
 
+const DEFAULT_FILE_SIZE_CLASS = 'js-enhance-pdf-link-file-size';
+
 export class EnhancePDFLinks extends EnhanceLinksBase {
 	private readonly showFileSize;
 	private readonly fileSizeClass;
@@ -18,8 +20,7 @@ export class EnhancePDFLinks extends EnhanceLinksBase {
 	constructor( options: EnhancePDFLinksOptions = {} ) {
 		super( options );
 		this.showFileSize = options.showFileSize ?? true;
-		this.fileSizeClass =
-			options.fileSizeClass || 'js-enhance-pdf-link-file-size';
+		this.fileSizeClass = options.fileSizeClass || DEFAULT_FILE_SIZE_CLASS;
 		this.createFileSizeElementFn = options.createFileSizeElement;
 
 		this.init();

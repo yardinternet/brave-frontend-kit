@@ -2,11 +2,22 @@ interface A11yCardsOptions {
 	selector?: string;
 }
 
+const DEFAULT_SELECTOR = '.wp-block-group.is-variation-card';
+
+const SELECTORS = {
+	link: 'a',
+	heading: '.wp-block-heading',
+} as const;
+
+const CLASSES = {
+	buttonLink: 'wp-block-button__link',
+} as const;
+
 export class A11yCards {
 	private readonly selector;
 
 	constructor( options: A11yCardsOptions = {} ) {
-		this.selector = options.selector || '.wp-block-group.is-variation-card';
+		this.selector = options.selector || DEFAULT_SELECTOR;
 		this.init();
 	}
 
@@ -23,7 +34,9 @@ export class A11yCards {
 	 * If so, move the link to the heading for better accessibility.
 	 */
 	private findLinks( card: HTMLElement ): void {
-		const links = card.querySelectorAll< HTMLAnchorElement >( 'a' );
+		const links = card.querySelectorAll< HTMLAnchorElement >(
+			SELECTORS.link
+		);
 
 		if ( links.length === 0 || links.length > 1 ) return;
 
@@ -32,7 +45,7 @@ export class A11yCards {
 
 		if (
 			link.getAttribute( 'href' ) &&
-			link.classList.contains( 'wp-block-button__link' )
+			link.classList.contains( CLASSES.buttonLink )
 		) {
 			this.a11yMoveLinkToHeading( link, card );
 		}
@@ -45,10 +58,10 @@ export class A11yCards {
 		link: HTMLAnchorElement,
 		card: HTMLElement
 	): void {
-		const heading = card.querySelector( '.wp-block-heading' );
+		const heading = card.querySelector( SELECTORS.heading );
 		if ( ! heading ) return;
 
-		if ( heading.querySelector( 'a' ) ) return;
+		if ( heading.querySelector( SELECTORS.link ) ) return;
 
 		const newLink = document.createElement( 'a' );
 		newLink.href = link.href;

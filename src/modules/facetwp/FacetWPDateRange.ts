@@ -2,10 +2,19 @@ interface FacetWPDateRangeOptions {
 	mobileBreakpoint?: number;
 }
 
+const SELECTORS = {
+	dateFacet: '.facetwp-type-date_range',
+	dateMin: '.facetwp-date-min[type="text"]',
+	dateMax: '.facetwp-date-max[type="text"]',
+	datePicker: '.fdate-wrap',
+} as const;
+
+const CLASSES = {
+	minFocused: 'facetwp-date-min-is-focused',
+	maxFocused: 'facetwp-date-max-is-focused',
+} as const;
+
 export class FacetWPDateRange {
-	private readonly DATE_FACET_SELECTOR = '.facetwp-type-date_range';
-	private readonly DATE_MIN_SELECTOR = '.facetwp-date-min[type="text"]';
-	private readonly DATE_MAX_SELECTOR = '.facetwp-date-max[type="text"]';
 	private readonly MOBILE_BREAKPOINT;
 	private resizeRafId: number | null = null;
 	private resizeObserver: ResizeObserver | null = null;
@@ -64,7 +73,7 @@ export class FacetWPDateRange {
 
 		if ( ! this.isDateInput( target ) ) return;
 
-		const facet = target.closest< HTMLElement >( this.DATE_FACET_SELECTOR );
+		const facet = target.closest< HTMLElement >( SELECTORS.dateFacet );
 
 		if ( ! facet ) return;
 
@@ -78,8 +87,8 @@ export class FacetWPDateRange {
 		}
 
 		return (
-			element.matches( this.DATE_MIN_SELECTOR ) ||
-			element.matches( this.DATE_MAX_SELECTOR )
+			element.matches( SELECTORS.dateMin ) ||
+			element.matches( SELECTORS.dateMax )
 		);
 	}
 
@@ -90,7 +99,7 @@ export class FacetWPDateRange {
 		if ( ! this.isDateInput( focusedElement ) ) return;
 
 		const facet = focusedElement.closest< HTMLElement >(
-			this.DATE_FACET_SELECTOR
+			SELECTORS.dateFacet
 		);
 
 		if ( ! facet ) return;
@@ -111,7 +120,9 @@ export class FacetWPDateRange {
 	};
 
 	private moveDatePicker( facet: HTMLElement ): void {
-		const fdate = document.querySelector< HTMLElement >( '.fdate-wrap' );
+		const fdate = document.querySelector< HTMLElement >(
+			SELECTORS.datePicker
+		);
 
 		if ( ! fdate ) return;
 
@@ -124,17 +135,19 @@ export class FacetWPDateRange {
 	}
 
 	private setDatePickerState( input: HTMLElement ): void {
-		const fdate = document.querySelector< HTMLElement >( '.fdate-wrap' );
+		const fdate = document.querySelector< HTMLElement >(
+			SELECTORS.datePicker
+		);
 
 		if ( ! fdate ) return;
 
 		fdate.classList.toggle(
-			'facetwp-date-min-is-focused',
-			input.matches( this.DATE_MIN_SELECTOR )
+			CLASSES.minFocused,
+			input.matches( SELECTORS.dateMin )
 		);
 		fdate.classList.toggle(
-			'facetwp-date-max-is-focused',
-			input.matches( this.DATE_MAX_SELECTOR )
+			CLASSES.maxFocused,
+			input.matches( SELECTORS.dateMax )
 		);
 	}
 }

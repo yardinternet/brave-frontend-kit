@@ -16,6 +16,8 @@ interface BraveTooltipManagerOptions {
 	hiddenClass?: string;
 }
 
+const DEFAULT_SELECTOR = '.js-brave-tooltip-trigger';
+
 export class BraveTooltipManager {
 	private readonly selectorTrigger: string;
 	private readonly options: Omit<
@@ -25,8 +27,7 @@ export class BraveTooltipManager {
 	private readonly tooltips = new Map< string, BraveTooltip >();
 
 	constructor( options: BraveTooltipManagerOptions = {} ) {
-		this.selectorTrigger =
-			options.selectorTrigger || '.js-brave-tooltip-trigger';
+		this.selectorTrigger = options.selectorTrigger || DEFAULT_SELECTOR;
 
 		this.options = {
 			selectorArrow: options.selectorArrow,

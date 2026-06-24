@@ -1,11 +1,12 @@
 type DropdownMode = 'hover' | 'click';
 
-export class BraveNavigation {
-	private readonly BRAVE_DROPDOWN_SELECTOR = '.brave-nav-dropdown';
-	private readonly BRAVE_NAV_ITEM_SELECTOR = '.brave-nav-item';
-	private readonly BRAVE_NAV_LINK_HAS_CHILDREN_SELECTOR =
-		'.brave-nav-link-has-children';
+const SELECTORS = {
+	dropdown: '.brave-nav-dropdown',
+	navItem: '.brave-nav-item',
+	linkHasChildren: '.brave-nav-link-has-children',
+} as const;
 
+export class BraveNavigation {
 	private readonly mode: DropdownMode;
 
 	private readonly activeDropdownToggleLinks: Set< HTMLAnchorElement > =
@@ -20,7 +21,7 @@ export class BraveNavigation {
 
 		this.dropdownToggleLinks = [
 			...this.container.querySelectorAll< HTMLAnchorElement >(
-				this.BRAVE_NAV_LINK_HAS_CHILDREN_SELECTOR
+				SELECTORS.linkHasChildren
 			),
 		];
 
@@ -31,7 +32,7 @@ export class BraveNavigation {
 
 	private detectMode(): DropdownMode {
 		const dropdown = this.container.querySelector< HTMLElement >(
-			this.BRAVE_DROPDOWN_SELECTOR
+			SELECTORS.dropdown
 		);
 
 		const mode = dropdown?.dataset.mode;
@@ -60,9 +61,7 @@ export class BraveNavigation {
 
 	private initHoverEvents(): void {
 		this.dropdownToggleLinks.forEach( ( link ) => {
-			const li = link.closest< HTMLElement >(
-				this.BRAVE_NAV_ITEM_SELECTOR
-			);
+			const li = link.closest< HTMLElement >( SELECTORS.navItem );
 
 			if ( ! li ) return;
 
@@ -90,7 +89,7 @@ export class BraveNavigation {
 		const target = event.target as HTMLElement;
 
 		const link = target.closest(
-			this.BRAVE_NAV_LINK_HAS_CHILDREN_SELECTOR
+			SELECTORS.linkHasChildren
 		) as HTMLAnchorElement | null;
 
 		if ( ! link || ! this.container.contains( link ) ) return;
@@ -160,17 +159,17 @@ export class BraveNavigation {
 		if ( ! target ) return;
 
 		const dropdown = target.closest(
-			this.BRAVE_DROPDOWN_SELECTOR
+			SELECTORS.dropdown
 		) as HTMLElement | null;
 
 		if ( ! dropdown ) return;
 
-		const navItem = dropdown.closest( this.BRAVE_NAV_ITEM_SELECTOR );
+		const navItem = dropdown.closest( SELECTORS.navItem );
 
 		if ( ! navItem ) return;
 
 		const toggle = navItem.querySelector(
-			this.BRAVE_NAV_LINK_HAS_CHILDREN_SELECTOR
+			SELECTORS.linkHasChildren
 		) as HTMLAnchorElement | null;
 
 		toggle?.focus();
@@ -202,10 +201,7 @@ export class BraveNavigation {
 
 		if ( this.mode === 'click' && this.container.contains( target ) )
 			return;
-		if (
-			this.mode === 'hover' &&
-			target.closest( this.BRAVE_DROPDOWN_SELECTOR )
-		)
+		if ( this.mode === 'hover' && target.closest( SELECTORS.dropdown ) )
 			return;
 
 		this.closeAllDropdowns();

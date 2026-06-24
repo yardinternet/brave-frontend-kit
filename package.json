@@ -1,6 +1,6 @@
 {
 	"name": "@yardinternet/brave-frontend-kit",
-	"version": "0.13.0",
+	"version": "0.13.1",
 	"type": "module",
 	"main": "dist/brave-frontend-kit.js",
 	"module": "dist/brave-frontend-kit.js",

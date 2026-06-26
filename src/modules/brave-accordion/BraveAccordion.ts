@@ -24,10 +24,22 @@ export class BraveAccordion {
 		const items = this.getAccordionItems( accordion );
 		if ( ! items || items.length === 0 ) return;
 
+		const openOnInit = this.getDefaultOpenItemIndexes( items );
+
+		// A11y: hide panels that start closed so their content is out of the
+		// accessibility tree and tab order on init, not only after a toggle.
+		items.forEach( ( item, index ) => {
+			if ( ! openOnInit.includes( index ) ) {
+				item
+					.querySelector( this.PANEL_SELECTOR )
+					?.classList.add( this.HIDDEN_CLASS );
+			}
+		} );
+
 		// https://github.com/michu2k/Accordion?tab=readme-ov-file#options
 		const accordionOptions = {
 			showMultiple: accordion.dataset.multiple === 'true',
-			openOnInit: this.getDefaultOpenItemIndexes( items ),
+			openOnInit,
 			ariaEnabled: true,
 			duration: 400,
 			beforeOpen: ( item: HTMLElement ): void => {

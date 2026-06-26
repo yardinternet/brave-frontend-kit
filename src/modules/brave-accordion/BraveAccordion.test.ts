@@ -124,6 +124,19 @@ describe( 'BraveAccordion', () => {
 		expect( style2.visibility ).toBe( 'visible' );
 	}
 
+	function testClosedPanelsHiddenOnInit(): void {
+		document.body.innerHTML = singleAccordionHtml;
+		new BraveAccordion();
+
+		const items = document.querySelectorAll( '.accordion-wrapper .ac' );
+		const closedPanel = items[ 0 ]!.querySelector( '.ac-panel' )!;
+		const openPanel = items[ 1 ]!.querySelector( '.ac-panel' )!;
+
+		// Closed panel is hidden on init; open (is-open) panel stays visible
+		expect( closedPanel.classList.contains( 'hidden' ) ).toBe( true );
+		expect( openPanel.classList.contains( 'hidden' ) ).toBe( false );
+	}
+
 	function testNoAccordionsPresent(): void {
 		document.body.innerHTML = /*html*/ '';
 		// Check that BraveAccordion does not throw an error if nothing is present
@@ -176,6 +189,10 @@ describe( 'BraveAccordion', () => {
 	it(
 		'shows correct open panels for multiple accordions independently',
 		testMultipleAccordionsOpenPanels
+	);
+	it(
+		'hides panels that start closed on initialization',
+		testClosedPanelsHiddenOnInit
 	);
 	it(
 		'does not throw if no accordions are present in the DOM',

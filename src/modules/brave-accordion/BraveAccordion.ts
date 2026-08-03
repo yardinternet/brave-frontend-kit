@@ -37,8 +37,8 @@ export class BraveAccordion {
 			if ( openOnInit.includes( index ) ) return;
 
 			item
-				.querySelector( this.PANEL_SELECTOR )
-				?.classList.add( this.HIDDEN_CLASS );
+				.querySelector( SELECTORS.panel )
+				?.classList.add( CLASSES.hidden );
 		} );
 
 		// https://github.com/michu2k/Accordion?tab=readme-ov-file#options

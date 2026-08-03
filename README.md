@@ -2,6 +2,20 @@
 
 A modular frontend toolkit designed to help with Brave project development, including accessibility enhancements, utility functions, and easy-to-use classes.
 
+### Module readme's
+
+- [A11yCards](src/modules/a11y-cards/README.md)
+- [A11yTribeEvents](src/modules/tribe-events/README.md)
+- [BraveAccordion](src/modules/brave-accordion/README.md)
+- [BraveDialog](src/modules/brave-dialog/README.md)
+- [BraveNavigation](src/modules/brave-navigation/README.md)
+- [BraveTooltip](src/modules/brave-tooltip/README.md)
+- [EnhanceLinks](src/modules/enhance-links/README.md)
+- [FacetWP](src/modules/facetwp/README.md)
+- [FocusStyle](src/modules/focus-style/README.md)
+- [Headroom](src/modules/headroom/README.md)
+- [WebShareApi](src/modules/web-share-api/README.md)
+
 ## ✅ Installation
 
 ```bash

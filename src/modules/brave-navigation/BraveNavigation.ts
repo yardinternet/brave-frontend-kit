@@ -3,10 +3,25 @@ type DropdownMode = 'hover' | 'click';
 const SELECTORS = {
 	dropdown: '.brave-nav-dropdown',
 	navItem: '.brave-nav-item',
+	link: '.brave-nav-link',
 	linkHasChildren: '.brave-nav-link-has-children',
 } as const;
 
+const NAV_KEYS: readonly string[] = [
+	'ArrowDown',
+	'ArrowRight',
+	'ArrowUp',
+	'ArrowLeft',
+	'Home',
+	'End',
+];
+
+const TOGGLE_ID_PREFIX = 'brave-nav-toggle-';
+const DROPDOWN_ID_PREFIX = 'brave-nav-dropdown-';
+
 export class BraveNavigation {
+	private static uid = 0;
+
 	private readonly mode: DropdownMode;
 
 	private readonly activeDropdownToggleLinks: Set< HTMLAnchorElement > =
@@ -47,6 +62,7 @@ export class BraveNavigation {
 
 		// Event delegation for clicks
 		this.container.addEventListener( 'click', this.onContainerClick );
+		this.container.addEventListener( 'keydown', this.onKeyDown );
 
 		if ( this.mode === 'hover' ) {
 			this.initHoverEvents();
@@ -77,9 +93,28 @@ export class BraveNavigation {
 		} );
 	}
 
+	/**
+	 * A11y: disclosure semantics per the APG disclosure navigation pattern.
+	 * No aria-haspopup: that announces an application menu and makes screen
+	 * readers instruct arrow-key behavior that a site nav does not have.
+	 *
+	 * @see https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/
+	 */
 	private setupAccessibility( link: HTMLAnchorElement ): void {
-		link.setAttribute( 'aria-haspopup', 'true' );
 		link.setAttribute( 'aria-expanded', 'false' );
+
+		const dropdown = link
+			.closest( SELECTORS.navItem )
+			?.querySelector( SELECTORS.dropdown );
+
+		if ( ! dropdown ) return;
+
+		BraveNavigation.uid += 1;
+		link.id ||= TOGGLE_ID_PREFIX + BraveNavigation.uid;
+		dropdown.id ||= DROPDOWN_ID_PREFIX + BraveNavigation.uid;
+
+		dropdown.setAttribute( 'aria-labelledby', link.id );
+		link.setAttribute( 'aria-controls', dropdown.id );
 	}
 
 	/**
@@ -124,6 +159,90 @@ export class BraveNavigation {
 				this.activeDropdownToggleLinks.add( link );
 				this.openDropdown( link );
 			}
+		}
+	}
+
+	/**
+	 * A11y: optional arrow key supplement from the APG disclosure navigation
+	 * pattern. Tab order stays untouched.
+	 */
+	private onKeyDown = ( event: KeyboardEvent ): void => {
+		if ( event.altKey || event.ctrlKey || event.metaKey ) return;
+		if ( ! NAV_KEYS.includes( event.key ) ) return;
+
+		const target = ( event.target as HTMLElement | null )?.closest(
+			SELECTORS.link
+		) as HTMLElement | null;
+
+		if ( ! target ) return;
+
+		const links = this.linksAround( target );
+		const next = this.nextLink(
+			event.key,
+			links,
+			links.indexOf( target ),
+			this.firstExpandedLink( target )
+		);
+
+		if ( ! next ) return;
+
+		event.preventDefault();
+		next.focus();
+	};
+
+	/**
+	 * The links the target navigates between: its own dropdown when inside
+	 * one, the top-level links otherwise.
+	 */
+	private linksAround( target: HTMLElement ): HTMLElement[] {
+		const dropdown = target.closest< HTMLElement >( SELECTORS.dropdown );
+
+		if ( dropdown ) {
+			return [
+				...dropdown.querySelectorAll< HTMLElement >( SELECTORS.link ),
+			];
+		}
+
+		return [
+			...this.container.querySelectorAll< HTMLElement >( SELECTORS.link ),
+		].filter( ( link ) => ! link.closest( SELECTORS.dropdown ) );
+	}
+
+	/**
+	 * The first link inside the target's own expanded dropdown, if any.
+	 */
+	private firstExpandedLink( target: HTMLElement ): HTMLElement | null {
+		if ( target.getAttribute( 'aria-expanded' ) !== 'true' ) return null;
+
+		const dropdownId = target.getAttribute( 'aria-controls' );
+		if ( ! dropdownId ) return null;
+
+		return (
+			document
+				.getElementById( dropdownId )
+				?.querySelector< HTMLElement >( SELECTORS.link ) ?? null
+		);
+	}
+
+	private nextLink(
+		key: string,
+		links: HTMLElement[],
+		index: number,
+		expandedLink: HTMLElement | null
+	): HTMLElement | undefined {
+		switch ( key ) {
+			case 'ArrowDown':
+			case 'ArrowRight':
+				return expandedLink ?? links[ index + 1 ];
+			case 'ArrowUp':
+			case 'ArrowLeft':
+				return links[ index - 1 ];
+			case 'Home':
+				return links[ 0 ];
+			case 'End':
+				return links[ links.length - 1 ];
+			default:
+				return undefined;
 		}
 	}
 

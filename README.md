@@ -34,7 +34,7 @@ npm install @yardinternet/brave-frontend-kit
 2. Click "Choose a tag", type the corresponding version (e.g. `v1.2.3`) and press Enter. Add a title and description for the release.
 3. Click "Publish release"
 
-The Github Workflow `release-package.yml` will run whenever a release is created in this repository. It sets `package.json`'s version from the release tag, then, if the tests pass, publishes the package to Github packages.
+The Github Workflow `release-package.yml` will run whenever a release is created in this repository. If the tests pass, then the package will be published to Github packages.
 
 ## About us
 

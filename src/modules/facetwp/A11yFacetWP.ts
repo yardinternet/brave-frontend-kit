@@ -16,6 +16,8 @@ const SELECTORS = {
 	toggle: '.facetwp-toggle:not(.facetwp-hidden)',
 	fieldset: 'fieldset',
 	legend: 'legend',
+	facet: '.facetwp-facet',
+	fSelectWrap: '.fs-wrap',
 } as const;
 
 const CLASSES = {
@@ -28,6 +30,7 @@ const TEMPLATE_VIEW_ID_SUFFIX = '-facetwp-template-view';
 export class A11yFacetWP {
 	public readonly selectorPrefix: string;
 	public readonly scrollToTopOffset: number;
+	private refreshedFselectFacet: string | null = null;
 
 	constructor( options: A11yFacetWPOptions = {} ) {
 		this.selectorPrefix = options.selectorPrefix || 'js-brave';
@@ -70,6 +73,8 @@ export class A11yFacetWP {
 			this.selectorPrefix + TEMPLATE_VIEW_ID_SUFFIX
 		);
 		if ( ! view ) return;
+
+		this.captureFselectFocus( view );
 		view.classList.add( CLASSES.loading );
 	}
 
@@ -82,6 +87,7 @@ export class A11yFacetWP {
 
 		if ( e ) e.preventDefault();
 		this.scrollToElementTop( view.getBoundingClientRect().top );
+		this.restoreFselectFocus( view );
 		this.addAriaLabelToSearch();
 		this.changeTabFocusPager();
 		this.toggleFilterLabelAndButton();
@@ -109,6 +115,44 @@ export class A11yFacetWP {
 			top: position,
 			behavior: 'smooth',
 		} );
+	}
+
+	/**
+	 * A11y: remember which fSelect facet has focus before FacetWP replaces
+	 * its markup and fSelect rebuilds its DOM on refresh.
+	 *
+	 * @param {Element} node
+	 */
+	private captureFselectFocus( node: Element ): void {
+		const doc = node.ownerDocument;
+		const facet = doc.activeElement?.closest( SELECTORS.facet );
+		this.refreshedFselectFacet =
+			facet?.querySelector( SELECTORS.fSelectWrap ) instanceof Element
+				? facet.getAttribute( 'data-name' )
+				: null;
+	}
+
+	/**
+	 * A11y: restore focus to the same fSelect facet after refresh, if focus
+	 * was lost to <body>. See captureFselectFocus().
+	 *
+	 * @param {Element} node
+	 */
+	private restoreFselectFocus( node: Element ): void {
+		if ( ! this.refreshedFselectFacet ) return;
+
+		const doc = node.ownerDocument;
+		if ( doc.activeElement !== doc.body ) {
+			this.refreshedFselectFacet = null;
+			return;
+		}
+
+		const wrap = doc.querySelector< HTMLElement >(
+			`${ SELECTORS.facet }[data-name="${ this.refreshedFselectFacet }"] ${ SELECTORS.fSelectWrap }`
+		);
+		wrap?.focus();
+
+		this.refreshedFselectFacet = null;
 	}
 
 	/**
@@ -162,6 +206,7 @@ export class A11yFacetWP {
 
 	/**
 	 * Build a pagination URL for the given page, preserving facet selections.
+	 * @param page
 	 */
 	private buildPagerHref( page: string ): string {
 		const prefix = window.FWP_JSON?.prefix ?? '_';

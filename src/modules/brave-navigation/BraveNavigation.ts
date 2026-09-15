@@ -167,7 +167,8 @@ export class BraveNavigation {
 	 * pattern. Tab order stays untouched.
 	 */
 	private onKeyDown = ( event: KeyboardEvent ): void => {
-		if ( event.altKey || event.ctrlKey || event.metaKey ) return;
+		if ( event.altKey || event.ctrlKey || event.metaKey || event.shiftKey )
+			return;
 		if ( ! NAV_KEYS.includes( event.key ) ) return;
 
 		const target = ( event.target as HTMLElement | null )?.closest(

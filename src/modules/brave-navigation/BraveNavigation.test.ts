@@ -7,15 +7,16 @@ const clickModeHtml = /*html*/ `
 	<nav class="brave-nav">
 		<ul>
 			<li class="brave-nav-item">
-				<a href="#" class="brave-nav-link-has-children">Item 1</a>
+				<a href="#" class="brave-nav-link brave-nav-link-has-children">Item 1</a>
 				<div class="brave-nav-dropdown">
-					<a href="#">Sub 1</a>
+					<a href="#" class="brave-nav-link">Sub 1</a>
+					<a href="#" class="brave-nav-link">Sub 1b</a>
 				</div>
 			</li>
 			<li class="brave-nav-item">
-				<a href="#" class="brave-nav-link-has-children">Item 2</a>
+				<a href="#" class="brave-nav-link brave-nav-link-has-children">Item 2</a>
 				<div class="brave-nav-dropdown">
-					<a href="#">Sub 2</a>
+					<a href="#" class="brave-nav-link">Sub 2</a>
 				</div>
 			</li>
 		</ul>
@@ -80,11 +81,26 @@ describe( 'BraveNavigation — initialization', () => {
 		document.body.innerHTML = '';
 	} );
 
-	it( 'sets aria-haspopup on all toggle links', () => {
+	it( 'does not set aria-haspopup on toggle links', () => {
 		const { links } = setup( clickModeHtml );
 
 		links.forEach( ( link ) => {
-			expect( link.getAttribute( 'aria-haspopup' ) ).toBe( 'true' );
+			expect( link.hasAttribute( 'aria-haspopup' ) ).toBe( false );
+		} );
+	} );
+
+	it( 'wires each toggle link to its dropdown with aria-controls and aria-labelledby', () => {
+		const { links, dropdowns } = setup( clickModeHtml );
+
+		links.forEach( ( link, index ) => {
+			const dropdown = dropdowns[ index ]!;
+
+			expect( link.id ).not.toBe( '' );
+			expect( dropdown.id ).not.toBe( '' );
+			expect( link.getAttribute( 'aria-controls' ) ).toBe( dropdown.id );
+			expect( dropdown.getAttribute( 'aria-labelledby' ) ).toBe(
+				link.id
+			);
 		} );
 	} );
 
@@ -257,6 +273,115 @@ describe( 'BraveNavigation — click mode', () => {
 		nav.onFocusIn( event );
 
 		expect( isExpanded( links[ 0 ]! ) ).toBe( true );
+	} );
+} );
+
+// ─── Keyboard supplement ──────────────────────────────────────────────────────
+
+describe( 'BraveNavigation — arrow key supplement', () => {
+	beforeEach( () => {
+		document.body.innerHTML = '';
+	} );
+
+	function pressKey(
+		element: HTMLElement,
+		key: string,
+		init: KeyboardEventInit = {}
+	): KeyboardEvent {
+		const event = new KeyboardEvent( 'keydown', {
+			key,
+			bubbles: true,
+			cancelable: true,
+			...init,
+		} );
+		element.dispatchEvent( event );
+
+		return event;
+	}
+
+	function activeElement(): Element | null {
+		// eslint-disable-next-line @wordpress/no-global-active-element
+		return document.activeElement;
+	}
+
+	it( 'moves focus to the next top-level link on ArrowRight', () => {
+		const { links } = setup( clickModeHtml );
+
+		links[ 0 ]!.focus();
+		const event = pressKey( links[ 0 ]!, 'ArrowRight' );
+
+		expect( event.defaultPrevented ).toBe( true );
+		expect( activeElement() ).toBe( links[ 1 ]! );
+	} );
+
+	it( 'moves focus to the previous top-level link on ArrowLeft', () => {
+		const { links } = setup( clickModeHtml );
+
+		links[ 1 ]!.focus();
+		pressKey( links[ 1 ]!, 'ArrowLeft' );
+
+		expect( activeElement() ).toBe( links[ 0 ]! );
+	} );
+
+	it( 'moves focus to first and last top-level link on Home and End', () => {
+		const { links } = setup( clickModeHtml );
+
+		links[ 1 ]!.focus();
+		pressKey( links[ 1 ]!, 'Home' );
+		expect( activeElement() ).toBe( links[ 0 ]! );
+
+		pressKey( links[ 0 ]!, 'End' );
+		expect( activeElement() ).toBe( links[ 1 ]! );
+	} );
+
+	it( 'moves focus into the expanded dropdown on ArrowDown', () => {
+		const { container, links } = setup( clickModeHtml );
+
+		clickLink( links[ 0 ]! );
+		links[ 0 ]!.focus();
+		pressKey( links[ 0 ]!, 'ArrowDown' );
+
+		const firstSubLink = container.querySelector(
+			'.brave-nav-dropdown .brave-nav-link'
+		) as HTMLElement;
+		expect( activeElement() ).toBe( firstSubLink );
+	} );
+
+	it( 'moves focus between links inside a dropdown with arrow keys', () => {
+		const { container, links } = setup( clickModeHtml );
+
+		clickLink( links[ 0 ]! );
+		const subLinks = [
+			...container.querySelectorAll< HTMLElement >(
+				'.brave-nav-dropdown .brave-nav-link'
+			),
+		];
+
+		subLinks[ 0 ]!.focus();
+		pressKey( subLinks[ 0 ]!, 'ArrowDown' );
+		expect( activeElement() ).toBe( subLinks[ 1 ]! );
+
+		pressKey( subLinks[ 1 ]!, 'ArrowUp' );
+		expect( activeElement() ).toBe( subLinks[ 0 ]! );
+	} );
+
+	it( 'ignores arrow keys with a modifier, so browser shortcuts keep working', () => {
+		const { links } = setup( clickModeHtml );
+
+		links[ 0 ]!.focus();
+		const event = pressKey( links[ 0 ]!, 'ArrowLeft', { altKey: true } );
+
+		expect( event.defaultPrevented ).toBe( false );
+		expect( activeElement() ).toBe( links[ 0 ]! );
+	} );
+
+	it( 'leaves unrelated keys alone', () => {
+		const { links } = setup( clickModeHtml );
+
+		links[ 0 ]!.focus();
+		const event = pressKey( links[ 0 ]!, 'a' );
+
+		expect( event.defaultPrevented ).toBe( false );
 	} );
 } );
 

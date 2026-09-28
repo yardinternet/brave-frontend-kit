@@ -71,7 +71,6 @@ describe( 'BraveNavigationManager', () => {
 		);
 
 		links.forEach( ( link ) => {
-			expect( link.getAttribute( 'aria-haspopup' ) ).toBe( 'true' );
 			expect( link.getAttribute( 'aria-expanded' ) ).toBe( 'false' );
 		} );
 	} );

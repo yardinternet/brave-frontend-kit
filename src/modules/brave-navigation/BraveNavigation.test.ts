@@ -7,16 +7,46 @@ const clickModeHtml = /*html*/ `
 	<nav class="brave-nav">
 		<ul>
 			<li class="brave-nav-item">
-				<a href="#" class="brave-nav-link-has-children">Item 1</a>
+				<a href="#" class="brave-nav-link brave-nav-link-has-children">Item 1</a>
 				<div class="brave-nav-dropdown">
-					<a href="#">Sub 1</a>
+					<a href="#" class="brave-nav-link">Sub 1</a>
+					<a href="#" class="brave-nav-link">Sub 1b</a>
 				</div>
 			</li>
 			<li class="brave-nav-item">
-				<a href="#" class="brave-nav-link-has-children">Item 2</a>
+				<a href="#" class="brave-nav-link brave-nav-link-has-children">Item 2</a>
 				<div class="brave-nav-dropdown">
-					<a href="#">Sub 2</a>
+					<a href="#" class="brave-nav-link">Sub 2</a>
 				</div>
+			</li>
+			<li class="brave-nav-item">
+				<a href="#" class="brave-nav-link">Item 3</a>
+			</li>
+		</ul>
+	</nav>
+`;
+
+const nestedDropdownHtml = /*html*/ `
+	<nav class="brave-nav">
+		<ul>
+			<li class="brave-nav-item">
+				<a href="#" class="brave-nav-link brave-nav-link-has-children">Item 1</a>
+				<ul class="brave-nav-dropdown">
+					<li class="brave-nav-item">
+						<a href="#" class="brave-nav-link">Sub 1</a>
+					</li>
+					<li class="brave-nav-item">
+						<a href="#" class="brave-nav-link brave-nav-link-has-children">Sub 2</a>
+						<ul class="brave-nav-dropdown">
+							<li class="brave-nav-item">
+								<a href="#" class="brave-nav-link">Sub 2a</a>
+							</li>
+						</ul>
+					</li>
+					<li class="brave-nav-item">
+						<a href="#" class="brave-nav-link">Sub 3</a>
+					</li>
+				</ul>
 			</li>
 		</ul>
 	</nav>
@@ -80,12 +110,34 @@ describe( 'BraveNavigation — initialization', () => {
 		document.body.innerHTML = '';
 	} );
 
-	it( 'sets aria-haspopup on all toggle links', () => {
+	it( 'does not set aria-haspopup on toggle links', () => {
 		const { links } = setup( clickModeHtml );
 
 		links.forEach( ( link ) => {
-			expect( link.getAttribute( 'aria-haspopup' ) ).toBe( 'true' );
+			expect( link.hasAttribute( 'aria-haspopup' ) ).toBe( false );
 		} );
+	} );
+
+	it( 'wires each toggle link to its dropdown with aria-controls and aria-labelledby', () => {
+		const { links, dropdowns } = setup( clickModeHtml );
+
+		links.forEach( ( link, index ) => {
+			const dropdown = dropdowns[ index ]!;
+
+			expect( link.id ).not.toBe( '' );
+			expect( dropdown.id ).not.toBe( '' );
+			expect( link.getAttribute( 'aria-controls' ) ).toBe( dropdown.id );
+			expect( dropdown.getAttribute( 'aria-labelledby' ) ).toBe(
+				link.id
+			);
+		} );
+
+		expect( new Set( links.map( ( link ) => link.id ) ).size ).toBe(
+			links.length
+		);
+		expect(
+			new Set( dropdowns.map( ( dropdown ) => dropdown.id ) ).size
+		).toBe( dropdowns.length );
 	} );
 
 	it( 'sets aria-expanded to false on all toggle links', () => {
@@ -257,6 +309,165 @@ describe( 'BraveNavigation — click mode', () => {
 		nav.onFocusIn( event );
 
 		expect( isExpanded( links[ 0 ]! ) ).toBe( true );
+	} );
+} );
+
+// ─── Keyboard supplement ──────────────────────────────────────────────────────
+
+describe( 'BraveNavigation — arrow key supplement', () => {
+	beforeEach( () => {
+		document.body.innerHTML = '';
+	} );
+
+	function pressKey(
+		element: HTMLElement,
+		key: string,
+		init: KeyboardEventInit = {}
+	): KeyboardEvent {
+		const event = new KeyboardEvent( 'keydown', {
+			key,
+			bubbles: true,
+			cancelable: true,
+			...init,
+		} );
+		element.dispatchEvent( event );
+
+		return event;
+	}
+
+	function activeElement(): Element | null {
+		// eslint-disable-next-line @wordpress/no-global-active-element
+		return document.activeElement;
+	}
+
+	function topLevelLinks( container: HTMLElement ): HTMLElement[] {
+		return [
+			...container.querySelectorAll< HTMLElement >( '.brave-nav-link' ),
+		].filter( ( link ) => ! link.closest( '.brave-nav-dropdown' ) );
+	}
+
+	it( 'moves focus to the next top-level link on ArrowRight', () => {
+		const { links } = setup( clickModeHtml );
+
+		links[ 0 ]!.focus();
+		const event = pressKey( links[ 0 ]!, 'ArrowRight' );
+
+		expect( event.defaultPrevented ).toBe( true );
+		expect( activeElement() ).toBe( links[ 1 ]! );
+	} );
+
+	it( 'moves focus to the previous top-level link on ArrowLeft', () => {
+		const { links } = setup( clickModeHtml );
+
+		links[ 1 ]!.focus();
+		pressKey( links[ 1 ]!, 'ArrowLeft' );
+
+		expect( activeElement() ).toBe( links[ 0 ]! );
+	} );
+
+	it( 'moves focus to first and last top-level link on Home and End', () => {
+		const { container } = setup( clickModeHtml );
+		const [ first, , last ] = topLevelLinks( container );
+
+		last!.focus();
+		pressKey( last!, 'Home' );
+		expect( activeElement() ).toBe( first! );
+
+		pressKey( first!, 'End' );
+		expect( activeElement() ).toBe( last! );
+	} );
+
+	it( 'keeps focus and swallows the key at the ends of the list', () => {
+		const { container } = setup( clickModeHtml );
+		const [ first, , last ] = topLevelLinks( container );
+
+		first!.focus();
+		expect( pressKey( first!, 'ArrowLeft' ).defaultPrevented ).toBe( true );
+		expect( activeElement() ).toBe( first! );
+
+		last!.focus();
+		expect( pressKey( last!, 'ArrowRight' ).defaultPrevented ).toBe( true );
+		expect( activeElement() ).toBe( last! );
+	} );
+
+	it( 'moves focus into the expanded dropdown on ArrowDown', () => {
+		const { container, links, dropdowns } = setup( clickModeHtml );
+
+		clickLink( links[ 0 ]! );
+		links[ 0 ]!.focus();
+		pressKey( links[ 0 ]!, 'ArrowDown' );
+
+		const firstSubLink = container.querySelector(
+			'.brave-nav-dropdown .brave-nav-link'
+		) as HTMLElement;
+		expect( activeElement() ).toBe( firstSubLink );
+
+		clickLink( links[ 1 ]! );
+		links[ 1 ]!.focus();
+		pressKey( links[ 1 ]!, 'ArrowDown' );
+
+		expect( activeElement() ).toBe(
+			dropdowns[ 1 ]!.querySelector( '.brave-nav-link' )
+		);
+	} );
+
+	it( 'skips links inside a nested collapsed dropdown', () => {
+		const { container, links } = setup( nestedDropdownHtml );
+
+		clickLink( links[ 0 ]! );
+		const sub2 = links[ 1 ]!;
+		const sub3 = [
+			...container.querySelectorAll< HTMLElement >( '.brave-nav-link' ),
+		].pop()!;
+
+		sub2.focus();
+		pressKey( sub2, 'ArrowDown' );
+		expect( activeElement() ).toBe( sub3 );
+
+		pressKey( sub3, 'ArrowUp' );
+		expect( activeElement() ).toBe( sub2 );
+	} );
+
+	it( 'moves focus between links inside a dropdown with arrow keys', () => {
+		const { container, links } = setup( clickModeHtml );
+
+		clickLink( links[ 0 ]! );
+		const subLinks = [
+			...container.querySelectorAll< HTMLElement >(
+				'.brave-nav-dropdown .brave-nav-link'
+			),
+		];
+
+		subLinks[ 0 ]!.focus();
+		pressKey( subLinks[ 0 ]!, 'ArrowDown' );
+		expect( activeElement() ).toBe( subLinks[ 1 ]! );
+
+		pressKey( subLinks[ 1 ]!, 'ArrowUp' );
+		expect( activeElement() ).toBe( subLinks[ 0 ]! );
+	} );
+
+	it.each( [ 'altKey', 'ctrlKey', 'metaKey', 'shiftKey' ] )(
+		'ignores arrow keys with %s, so browser shortcuts keep working',
+		( modifier ) => {
+			const { links } = setup( clickModeHtml );
+
+			links[ 0 ]!.focus();
+			const event = pressKey( links[ 0 ]!, 'ArrowRight', {
+				[ modifier ]: true,
+			} );
+
+			expect( event.defaultPrevented ).toBe( false );
+			expect( activeElement() ).toBe( links[ 0 ]! );
+		}
+	);
+
+	it( 'leaves unrelated keys alone', () => {
+		const { links } = setup( clickModeHtml );
+
+		links[ 0 ]!.focus();
+		const event = pressKey( links[ 0 ]!, 'a' );
+
+		expect( event.defaultPrevented ).toBe( false );
 	} );
 } );
 

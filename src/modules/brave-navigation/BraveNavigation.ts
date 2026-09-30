@@ -85,8 +85,6 @@ export class BraveNavigation {
 
 	/**
 	 * A11y: disclosure semantics per the APG disclosure navigation pattern.
-	 * No aria-haspopup: that announces an application menu and makes screen
-	 * readers instruct arrow-key behavior that a site nav does not have.
 	 *
 	 * @see https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/
 	 */

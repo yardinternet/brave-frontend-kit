@@ -206,7 +206,6 @@ export class A11yFacetWP {
 
 	/**
 	 * Build a pagination URL for the given page, preserving facet selections.
-	 * @param page
 	 */
 	private buildPagerHref( page: string ): string {
 		const prefix = window.FWP_JSON?.prefix ?? '_';
